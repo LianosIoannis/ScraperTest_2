@@ -3,6 +3,8 @@ using Kuto;
 using System.IO;
 using System.Text.RegularExpressions;
 using ScrapySharp;
+using System.Linq;
+using ScrapySharp.Extensions;
 
 namespace ScraperTest_2
 {
@@ -256,6 +258,7 @@ namespace ScraperTest_2
             HtmlWeb web = new HtmlWeb();
             HtmlAgilityPack.HtmlDocument d = web.Load(url);
             //MessageBox.Show(d.DocumentNode.SelectNodes("//tr[@class='   ']").Count.ToString());
+
 
             //MessageBox.Show(d.DocumentNode.SelectSingleNode("//*[@id=\"_dissclinventory_WAR_dissclinventoryportlet_ocerSearchContainerSearchContainer\"]/table/tbody/tr[3]/td[5]").InnerText.Trim());
             try
