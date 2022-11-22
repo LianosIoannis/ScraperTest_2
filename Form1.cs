@@ -2,6 +2,7 @@ using HtmlAgilityPack;
 using Kuto;
 using System.IO;
 using System.Text.RegularExpressions;
+using ScrapySharp;
 
 namespace ScraperTest_2
 {
@@ -254,14 +255,16 @@ namespace ScraperTest_2
         {
             HtmlWeb web = new HtmlWeb();
             HtmlAgilityPack.HtmlDocument d = web.Load(url);
-            MessageBox.Show(d.DocumentNode.SelectSingleNode("//*[@id=\"_dissclinventory_WAR_dissclinventoryportlet_ocerSearchContainerSearchContainer\"]/table/tbody/tr[3]/td[5]").InnerText.Trim());
+            //MessageBox.Show(d.DocumentNode.SelectNodes("//tr[@class='   ']").Count.ToString());
+
+            //MessageBox.Show(d.DocumentNode.SelectSingleNode("//*[@id=\"_dissclinventory_WAR_dissclinventoryportlet_ocerSearchContainerSearchContainer\"]/table/tbody/tr[3]/td[5]").InnerText.Trim());
             try
             {
                 foreach (var cell in d.DocumentNode.SelectNodes("//tr[@class='   ']"))
                 {
-                    var a = cell.Descendants("td").ToList();
+                    var a = cell.Descendants("td").Where(d => d.Descendants().Count() == 0).ToList();
                     
-                    var b = a.Count();
+                    var b = a.Count;
 
                     for (int i = 0; i < b; i++)
                     {
