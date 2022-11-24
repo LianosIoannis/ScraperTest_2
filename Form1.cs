@@ -12,6 +12,7 @@ using System.Net;
 using System.Data.SqlClient;
 using System.Data;
 using Microsoft.VisualBasic;
+using HtmlAgilityPack.CssSelectors.NetCore;
 
 namespace ScraperTest_2
 {
@@ -453,6 +454,55 @@ namespace ScraperTest_2
                 else MessageBox.Show("WRONG NUMBER !");
             }
             else MessageBox.Show("WRONG FORMAT !");
+            
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\DETAILS.txt");
+            string url;
+            while ((url = reader.ReadLine()) != null)
+            {
+                HtmlWeb web = new HtmlWeb();
+                HtmlAgilityPack.HtmlDocument d = web.Load(url);
+
+                var h = from k in d.DocumentNode.SelectNodes("//table")
+                        where k.GetAttributeValue("class") == "CLPtable taglib-search-iterator"
+                        select k;
+                var t = from l in h.ElementAt(0).Descendants("tr")
+                        where l.GetAttributeValue("class") == "results-row" || l.GetAttributeValue("class") == "results-row-alt"
+                        select l;
+
+
+                foreach (var c in t)
+                {
+                    string line = "";
+                    var v = c.Descendants("td").ElementAt(0).InnerText.Trim();
+
+                    line += v;
+
+                    if (v != "")
+                    {
+                        try
+                        {
+                            line += "|" + c.Descendants("td").ElementAt(1).Descendants("span").ElementAt(0).InnerText.Trim();
+                        }
+                        catch (Exception ex)
+                        {
+                            line = "";
+                        }
+                    }
+                    if (line != "")
+                    {
+                        StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\HAZARDS.txt", true);
+                        writer.WriteLine(line);
+                        writer.Close();
+                    }
+                }
+            }
+
+            reader.Close();
+            MessageBox.Show("DONE !");
             
         }
     }
