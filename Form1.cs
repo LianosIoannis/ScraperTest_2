@@ -81,8 +81,11 @@ namespace ScraperTest_2
                 try
                 {
                     StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\NAMES.txt", true);
+                    var k = from a in d.DocumentNode.SelectNodes("//a[@class='substanceNameLink']")
+                            where a.GetAttributeValue("href") != ""
+                            select a;
 
-                    foreach (var cell in d.DocumentNode.SelectNodes("//a[@class='substanceNameLink']"))
+                    foreach (var cell in k)
                     {
                         //MessageBox.Show(cell.InnerText.Trim());
                         writer.WriteLine(cell.InnerText.Trim());
@@ -311,7 +314,10 @@ namespace ScraperTest_2
                 HtmlWeb web = new HtmlWeb();
                 HtmlAgilityPack.HtmlDocument d = web.Load(new_url);
 
-                var s = d.DocumentNode.SelectNodes("//a[@class='details']");
+                var s = from k in d.DocumentNode.SelectNodes("//a[@class='details']")
+                        where k.GetAttributeValue("title") == "View notifications"
+                        select k;
+
                 int count = s.ToList().Count();
 
                 StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\DETAILS.txt", true);
