@@ -44,6 +44,10 @@
             this.SourceText = new System.Windows.Forms.Label();
             this.DetailsText = new System.Windows.Forms.Label();
             this.ClearButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // RetrieveButton
@@ -86,21 +90,21 @@
             // 
             // SourceProgress
             // 
-            this.SourceProgress.Location = new System.Drawing.Point(12, 297);
+            this.SourceProgress.Location = new System.Drawing.Point(12, 280);
             this.SourceProgress.Name = "SourceProgress";
             this.SourceProgress.Size = new System.Drawing.Size(661, 23);
             this.SourceProgress.TabIndex = 7;
             // 
             // ImagesProgress
             // 
-            this.ImagesProgress.Location = new System.Drawing.Point(12, 242);
+            this.ImagesProgress.Location = new System.Drawing.Point(12, 230);
             this.ImagesProgress.Name = "ImagesProgress";
             this.ImagesProgress.Size = new System.Drawing.Size(661, 23);
             this.ImagesProgress.TabIndex = 8;
             // 
             // DetailsProgress
             // 
-            this.DetailsProgress.Location = new System.Drawing.Point(12, 353);
+            this.DetailsProgress.Location = new System.Drawing.Point(12, 330);
             this.DetailsProgress.Name = "DetailsProgress";
             this.DetailsProgress.Size = new System.Drawing.Size(661, 23);
             this.DetailsProgress.TabIndex = 9;
@@ -144,7 +148,7 @@
             // ImagesText
             // 
             this.ImagesText.AutoSize = true;
-            this.ImagesText.Location = new System.Drawing.Point(679, 250);
+            this.ImagesText.Location = new System.Drawing.Point(679, 238);
             this.ImagesText.Name = "ImagesText";
             this.ImagesText.Size = new System.Drawing.Size(49, 15);
             this.ImagesText.TabIndex = 14;
@@ -153,7 +157,7 @@
             // SourceText
             // 
             this.SourceText.AutoSize = true;
-            this.SourceText.Location = new System.Drawing.Point(680, 305);
+            this.SourceText.Location = new System.Drawing.Point(679, 288);
             this.SourceText.Name = "SourceText";
             this.SourceText.Size = new System.Drawing.Size(51, 15);
             this.SourceText.TabIndex = 15;
@@ -162,7 +166,7 @@
             // DetailsText
             // 
             this.DetailsText.AutoSize = true;
-            this.DetailsText.Location = new System.Drawing.Point(680, 361);
+            this.DetailsText.Location = new System.Drawing.Point(679, 338);
             this.DetailsText.Name = "DetailsText";
             this.DetailsText.Size = new System.Drawing.Size(49, 15);
             this.DetailsText.TabIndex = 16;
@@ -178,11 +182,55 @@
             this.ClearButton.UseVisualStyleBackColor = true;
             this.ClearButton.Click += new System.EventHandler(this.ClearButton_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(93, 415);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(123, 23);
+            this.button1.TabIndex = 18;
+            this.button1.Text = "VIEW DATA";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(222, 415);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(137, 23);
+            this.button2.TabIndex = 19;
+            this.button2.Text = "DOWNLOAD IMAGES";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(365, 415);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(93, 23);
+            this.button3.TabIndex = 20;
+            this.button3.Text = "STORE TO DB";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click_1);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(12, 359);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(108, 23);
+            this.button4.TabIndex = 21;
+            this.button4.Text = "SET URLS COUNT";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.ClearButton);
             this.Controls.Add(this.DetailsText);
             this.Controls.Add(this.SourceText);
@@ -223,5 +271,9 @@
         private Label SourceText;
         private Label DetailsText;
         private Button ClearButton;
+        private Button button1;
+        private Button button2;
+        private Button button3;
+        private Button button4;
     }
 }

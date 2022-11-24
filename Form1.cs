@@ -8,6 +8,10 @@ using ScrapySharp;
 using System.Linq;
 using ScrapySharp.Extensions;
 using static System.Net.Mime.MediaTypeNames;
+using System.Net;
+using System.Data.SqlClient;
+using System.Data;
+using Microsoft.VisualBasic;
 
 namespace ScraperTest_2
 {
@@ -233,18 +237,23 @@ namespace ScraperTest_2
                 {
                     foreach (var cell in d.DocumentNode.SelectNodes("//tr[@class='   ']"))
                     {
-                        var a = cell.Descendants("img");
+                        var k = from c in cell.Descendants("img")
+                                where c.GetAttributeValue("title", "") != ""
+                                select c;
 
                         StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\IMAGES.txt", true);
 
                         string line = "";
                         int i = 1;
-                        foreach (var c in a)
+                        foreach (var c in k)
                         {
-                            string s = c.Attributes["src"].Value.Trim();
-                            if (s != "") line += "https://echa.europa.eu/" + s;
-                            if (i != a.Count() && s != "") line += "|";
-                            i++;
+                            string v = c.GetAttributeValue("title", "").Trim().ToLower();
+                            if (v != "")
+                            {
+                                line += v;
+                                if (i != k.Count()) line += "|";
+                                i++;
+                            }                           
                         }
                         if (line == "") line = "NULL";
                         writer.WriteLine(line);
@@ -319,41 +328,6 @@ namespace ScraperTest_2
             DetailsText.Text = "OK";
         }
 
-        private void find_AllRow()
-        {
-
-            string new_url;
-
-            for (int j = 0; j < max; j++)
-            {
-                new_url = url + (j + 1).ToString();
-
-                HtmlWeb web = new HtmlWeb();
-                HtmlAgilityPack.HtmlDocument d = web.Load(new_url);
-
-
-                try
-                {
-                    foreach (var cell in d.DocumentNode.SelectNodes("//tr[@class='   ']"))
-                    {
-                        var a = cell.Descendants("td").ToList();
-
-                        var b = a.Count();
-
-                        for (int i = 0; i < b; i++)
-                        {
-                            MessageBox.Show(a[i].InnerText.Trim());
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message.ToString());
-                }
-            }
-
-        }
-
         private void ClearButton_Click(object sender, EventArgs e)
         {
             File.WriteAllText("C:\\Users\\User\\Desktop\\NAMES.txt", String.Empty);
@@ -363,6 +337,117 @@ namespace ScraperTest_2
             File.WriteAllText("C:\\Users\\User\\Desktop\\IMAGES.txt", String.Empty);
             File.WriteAllText("C:\\Users\\User\\Desktop\\SOURCE.txt", String.Empty);
             File.WriteAllText("C:\\Users\\User\\Desktop\\DETAILS.txt", String.Empty);
+            MessageBox.Show("CLEAR DONE !");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form2 f2 = new Form2();
+            f2.ShowDialog();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fd = new FolderBrowserDialog();
+            fd.ShowDialog();
+            string path = fd.SelectedPath;
+
+            if (path != null)
+            {
+                string url = "https://echa.europa.eu/o/com.ed.echa.portlet.dissclinventory/images/pictograms/";
+
+                for (int i = 0; i < 9; i++)
+                {
+                    using (WebClient w = new WebClient())
+                    {
+                        try
+                        {
+                            string img_path = path + "\\ghs0" + (i + 1).ToString() + ".png";
+                            string img_url = url + "ghs0" + (i + 1).ToString() + ".png";
+                            w.DownloadFile(new Uri(img_url), img_path);
+                            Store_ImgToDB(img_path);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message.ToString() + "Image : " + (i+1).ToString());
+                        }
+                        w.Dispose();
+                    } 
+                    
+                }
+                MessageBox.Show("DOWNLOAD COMPLETED !");
+            }
+        }
+
+        private void Store_ImgToDB(string image_path)
+        {
+            string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            SqlConnection conn = new SqlConnection(cstr);
+            string sql = "INSERT INTO [IMAGES](NAME, IMAGE) VALUES (@NAME, @IMAGE)";
+            SqlCommand cmd = new SqlCommand(sql, conn);
+
+            string name = System.IO.Path.GetFileName(image_path);
+
+            byte[] img = GetImg(image_path);
+            cmd.Parameters.Add("@NAME", SqlDbType.Text).Value = name;
+            cmd.Parameters.Add("@IMAGE", SqlDbType.Image).Value = img;
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message.ToString()); }
+            conn.Close();
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            SqlConnection conn = new SqlConnection(cstr);
+            string sql = "INSERT INTO [IMAGES](NAME, IMAGE) VALUES (@NAME, @IMAGE)";
+            SqlCommand cmd = new SqlCommand(sql, conn);
+
+            string path = "C:\\Users\\User\\Desktop\\IMAGES\\ghs01.png";
+            string name = System.IO.Path.GetFileName(path);
+
+            byte[] img = GetImg(path);
+            cmd.Parameters.Add("@NAME", SqlDbType.Text).Value = name;
+            cmd.Parameters.Add("@IMAGE", SqlDbType.Image).Value = img;
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch(Exception ex) { MessageBox.Show(ex.Message.ToString()); }
+            conn.Close();
+        }
+
+        private static byte[] GetImg(string filePath)
+        {
+            FileStream stream = new FileStream(
+            filePath, FileMode.Open, FileAccess.Read);
+            BinaryReader reader = new BinaryReader(stream);
+
+            byte[] photo = reader.ReadBytes((int)stream.Length);
+
+            reader.Close();
+            stream.Close();
+
+            return photo;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string m = Interaction.InputBox("Input Urls Count", "Input", "1");
+            if (int.TryParse(m, out int v))
+            {
+                if (v > 0 && v <= 4279) max = v;
+                else MessageBox.Show("WRONG NUMBER !");
+            }
+            else MessageBox.Show("WRONG FORMAT !");
+            
         }
     }
 }
