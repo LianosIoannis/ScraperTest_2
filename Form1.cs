@@ -460,11 +460,11 @@ namespace ScraperTest_2
         private void button5_Click(object sender, EventArgs e)
         {
             StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\DETAILS.txt");
-            string url;
-            while ((url = reader.ReadLine()) != null)
+            string details_url;
+            while ((details_url = reader.ReadLine()) != null)
             {
                 HtmlWeb web = new HtmlWeb();
-                HtmlAgilityPack.HtmlDocument d = web.Load(url);
+                HtmlAgilityPack.HtmlDocument d = web.Load(details_url);
 
                 var h = from k in d.DocumentNode.SelectNodes("//table")
                         where k.GetAttributeValue("class") == "CLPtable taglib-search-iterator"
@@ -479,13 +479,14 @@ namespace ScraperTest_2
                     string line = "";
                     var v = c.Descendants("td").ElementAt(0).InnerText.Trim();
 
-                    line += v;
+                    line += String.Concat(v.Where(c => !Char.IsWhiteSpace(c)));
 
                     if (v != "")
                     {
                         try
                         {
-                            line += "|" + c.Descendants("td").ElementAt(1).Descendants("span").ElementAt(0).InnerText.Trim();
+                            string temp = c.Descendants("td").ElementAt(1).Descendants("span").ElementAt(0).InnerText.Trim();
+                            line += "|" + String.Concat(temp.Where(c => !Char.IsWhiteSpace(c)));
                         }
                         catch (Exception ex)
                         {
@@ -495,7 +496,7 @@ namespace ScraperTest_2
                     if (line != "")
                     {
                         StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\HAZARDS.txt", true);
-                        writer.WriteLine(line);
+                        writer.WriteLine(details_url.Split('/').Last() + "|" + line);
                         writer.Close();
                     }
                 }
@@ -504,6 +505,118 @@ namespace ScraperTest_2
             reader.Close();
             MessageBox.Show("DONE !");
             
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\DETAILS.txt");
+            string details_url;
+
+            while ((details_url = reader.ReadLine()) != null)
+            {
+                HtmlWeb web = new HtmlWeb();
+                HtmlAgilityPack.HtmlDocument d = web.Load(details_url);
+
+                var h = from k in d.DocumentNode.SelectNodes("//table")
+                        where k.GetAttributeValue("class") == "CLPtable taglib-search-iterator"
+                        select k;
+                var t = from l in h.ElementAt(0).Descendants("tr")
+                        where l.GetAttributeValue("class") == "results-row" || l.GetAttributeValue("class") == "results-row-alt"
+                        select l;
+
+
+                foreach (var c in t)
+                {
+                    string line = "";
+                    var v = c.Descendants("td").ElementAt(0).InnerText.Trim();
+
+                    if (v == "") v = "NULL";
+                    line += String.Concat(v.Where(c => !Char.IsWhiteSpace(c)));
+
+
+                    try
+                    {
+                        string temp = c.Descendants("td").ElementAt(1).Descendants("span").ElementAt(0).InnerText.Trim();
+                        if (temp == "") temp = "NULL";
+                        line += "|" + String.Concat(temp.Where(c => !Char.IsWhiteSpace(c)));
+                    }
+                    catch (Exception ex)
+                    {
+                        line += "|NULL";
+                    }
+
+                    try
+                    {
+                        string temp = c.Descendants("td").ElementAt(2).Descendants("span").ElementAt(0).InnerText.Trim();
+                        if (temp == "") temp = "NULL";
+                        line += "|" + String.Concat(temp.Where(c => !Char.IsWhiteSpace(c)));
+                    }
+                    catch (Exception ex)
+                    {
+                        line += "|NULL";
+                    }
+
+                    if (line != "")
+                    {
+                        StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\HAZARDS1.txt", true);
+                        writer.WriteLine(details_url.Split('/').Last() + "|" + line);
+                        writer.Close();
+                    }
+                }
+            }
+
+            reader.Close();
+            MessageBox.Show("DONE !");
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            SqlConnection conn = new SqlConnection(cstr);
+            string sql = "INSERT INTO [HAZARDS](URL, HCATEGORY, HSTATEMENT) VALUES (@URL, @HCATEGORY, @HSTATEMENT)";
+
+            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\HAZARDS.txt");
+            string line;
+            conn.Open();
+            while ((line = reader.ReadLine()) != null)
+            {
+                string[] split = line.Split("|");
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@URL", split[0]);
+                cmd.Parameters.AddWithValue("@HCATEGORY", split[1]);
+                cmd.Parameters.AddWithValue("@HSTATEMENT", split[2]);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+            conn.Close();
+            MessageBox.Show("DONE !");
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            SqlConnection conn = new SqlConnection(cstr);
+            string sql = "INSERT INTO [HAZARDS1](URL, HCATEGORY, HSTATEMENT1, HSTATEMENT2) VALUES (@URL, @HCATEGORY, @HSTATEMENT1, @HSTATEMENT2)";
+
+            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\HAZARDS1.txt");
+            string line;
+            conn.Open();
+            while ((line = reader.ReadLine()) != null)
+            {
+                string[] split = line.Split("|");
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@URL", split[0]);
+                cmd.Parameters.AddWithValue("@HCATEGORY", split[1]);
+                cmd.Parameters.AddWithValue("@HSTATEMENT1", split[2]);
+                cmd.Parameters.AddWithValue("@HSTATEMENT2", split[3]);
+
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+            conn.Close();
+            MessageBox.Show("DONE !");
         }
     }
 }
