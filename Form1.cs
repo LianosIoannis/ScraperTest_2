@@ -13,6 +13,7 @@ using System.Data.SqlClient;
 using System.Data;
 using Microsoft.VisualBasic;
 using HtmlAgilityPack.CssSelectors.NetCore;
+using System.ComponentModel;
 
 namespace ScraperTest_2
 {
@@ -20,7 +21,7 @@ namespace ScraperTest_2
 
     public partial class Form1 : Form
     {
-
+        BackgroundWorker bgw;
         string url = "https://echa.europa.eu/el/information-on-chemicals/cl-inventory-database?p_p_id=dissclinventory_WAR_dissclinventoryportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_dissclinventory_WAR_dissclinventoryportlet_jspPage=%2Fhtml%2Fsearch%2Fsearch.jsp&_dissclinventory_WAR_dissclinventoryportlet_searching=true&_dissclinventory_WAR_dissclinventoryportlet_iterating=true&_dissclinventory_WAR_dissclinventoryportlet_criteriaParam=_dissclinventory_WAR_dissclinventoryportlet_criteriaKeytcZP&_dissclinventory_WAR_dissclinventoryportlet_delta=50&_dissclinventory_WAR_dissclinventoryportlet_orderByCol=&_dissclinventory_WAR_dissclinventoryportlet_orderByType=asc&_dissclinventory_WAR_dissclinventoryportlet_resetCur=false&_dissclinventory_WAR_dissclinventoryportlet_cur=";
         int max = 1;
         public Form1()
@@ -30,7 +31,7 @@ namespace ScraperTest_2
         }
 
 
-        private void button3_Click(object sender, EventArgs e)
+        private async void button3_Click(object sender, EventArgs e)
         {
             NamesProgress.Maximum = max * 50;
             EcProgress.Maximum = max * 50;
@@ -56,6 +57,29 @@ namespace ScraperTest_2
             SourceText.Text = "...";
             DetailsText.Text = "...";
 
+            //bgw = new BackgroundWorker();
+
+
+
+            //async Task Run(() => find_Names());
+            //await Task.Run(() => find_EC());
+            //await Task.Run(() => find_CAS());
+            //await Task.Run(() => find_CLASS());
+            //await Task.Run(() => find_IMAGES());
+            //await Task.Run(() => find_SOURCE());
+            //await Task.Run(() => find_DETAILS());
+
+            //Thread t1 = new Thread(find_Names);
+            //t1.Start();
+            //Thread t2 = new Thread(find_Names);
+            //Thread t3 = new Thread(find_Names);
+            //Thread t4 = new Thread(find_Names);
+            //Thread t5 = new Thread(find_Names);
+            //Thread t6 = new Thread(find_Names);
+            //Thread t7 = new Thread(find_Names);
+
+
+            //new Task(find_Names).Start();
 
             find_Names();
             find_EC();
@@ -66,8 +90,10 @@ namespace ScraperTest_2
             find_DETAILS();
 
             //Parallel.Invoke(find_Names, find_EC, find_CAS, find_DETAILS, find_CLASS,find_IMAGES, find_DETAILS, find_SOURCE);    
-        }  
-        
+        }
+
+       
+            
         private void find_Names()
         {
             string new_url;
@@ -90,6 +116,7 @@ namespace ScraperTest_2
                     {
                         //MessageBox.Show(cell.InnerText.Trim());
                         writer.WriteLine(cell.InnerText.Trim());
+                        //NamesProgress.BeginInvoke(new InvokeDelegate(InvokeMethod));
                         NamesProgress.Value += 1;
                     }
 
@@ -205,9 +232,9 @@ namespace ScraperTest_2
                         int i = 1;
                         foreach (var c in a)
                         {
-                            //MessageBox.Show(c.InnerText.Trim());
-                            if (c.InnerText.Trim() != "") line += c.InnerText.Trim();
-                            if (i != a.Count() && c.InnerText.Trim() != "") line += "|";
+                            string temp = String.Concat(c.InnerText.Trim().Where(k => !Char.IsWhiteSpace(k)));
+                            if (temp != "") line += temp;
+                            if (i != a.Count() && temp != "") line += "|";
                             i++;
                         }
                         if (line == "") line = "NULL";
@@ -612,6 +639,92 @@ namespace ScraperTest_2
                 cmd.Parameters.AddWithValue("@HSTATEMENT1", split[2]);
                 cmd.Parameters.AddWithValue("@HSTATEMENT2", split[3]);
 
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+            conn.Close();
+            MessageBox.Show("DONE !");
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            string u = "https://echa.europa.eu/el/registry-of-svhc-intentions?p_p_id=disslists_WAR_disslistsportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_disslists_WAR_disslistsportlet_lec_submitter=&_disslists_WAR_disslistsportlet_sbm_expected_submissionTo=&_disslists_WAR_disslistsportlet_dte_opinionTo=&_disslists_WAR_disslistsportlet_orderByCol=sbm_expected_submission&_disslists_WAR_disslistsportlet_substance_identifier_field_key=&_disslists_WAR_disslistsportlet_delta=50&_disslists_WAR_disslistsportlet_dte_adoptionFrom=&_disslists_WAR_disslistsportlet_deltaParamValue=50&_disslists_WAR_disslistsportlet_dte_withdrawnFrom=&_disslists_WAR_disslistsportlet_dte_withdrawnTo=&_disslists_WAR_disslistsportlet_dte_adoptionTo=&_disslists_WAR_disslistsportlet_multiValueSearchOperatorhaz_detailed_concern=AND&_disslists_WAR_disslistsportlet_prc_public_status=Identified+SVHC&_disslists_WAR_disslistsportlet_orderByType=desc&_disslists_WAR_disslistsportlet_dte_opinionFrom=&_disslists_WAR_disslistsportlet_dte_intentionFrom=&_disslists_WAR_disslistsportlet_dte_inclusionFrom=&_disslists_WAR_disslistsportlet_dte_inclusionTo=&_disslists_WAR_disslistsportlet_doSearch=&_disslists_WAR_disslistsportlet_sbm_expected_submissionFrom=&_disslists_WAR_disslistsportlet_dte_intentionTo=&_disslists_WAR_disslistsportlet_resetCur=false&_disslists_WAR_disslistsportlet_cur=";
+            
+            for (int i = 0; i < 5; i++)
+            {
+                string nu = u + (i + 1).ToString();
+                HtmlWeb web = new HtmlWeb();
+                HtmlAgilityPack.HtmlDocument d = web.Load(nu);
+
+                var s = d.DocumentNode.SelectNodes("//a[contains(@class, 'substanceNameLink')]");
+                //MessageBox.Show(s.Count().ToString());
+                StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\HAZARDS2.txt", true);
+                foreach (var ss in s)
+                {
+                    try
+                    {
+                        writer.WriteLine(ss.GetAttributeValue("href"));
+                    }
+                    catch (Exception ex)
+                    { MessageBox.Show(ex.Message); }
+                }
+                writer.Close();
+            }
+
+
+            MessageBox.Show("DONE !");
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            string nu;
+
+
+            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\HAZARDS2.txt");
+            StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\SUBS.txt", true);
+            
+
+            while((nu = reader.ReadLine()) != null)
+            {
+                HtmlWeb web = new HtmlWeb();
+                HtmlAgilityPack.HtmlDocument d = web.Load(nu);
+
+                var h = from k in d.DocumentNode.SelectNodes("//h2")
+                        where k.HasAttributes == false
+                        select k.FirstChild;
+
+                string s1 = h.ElementAt(0).InnerText.Trim();
+                string s2 = d.DocumentNode.SelectSingleNode("//*[@id=\"infocardContainer\"]/div/div[1]/div/div[1]/div/div[1]/div/div/div/p[1]/text()").InnerText.Trim();
+                string s3 = d.DocumentNode.SelectSingleNode("//*[@id=\"infocardContainer\"]/div/div[1]/div/div[1]/div/div[1]/div/div/div/p[2]/span").InnerText.Trim();
+                string line = s1 + "|" + s2 + "|" + s3;     
+
+                writer.WriteLine(line);
+            }          
+            reader.Close();
+            writer.Close();
+            MessageBox.Show("DONE !");
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            SqlConnection conn = new SqlConnection(cstr);
+            string sql = "INSERT INTO [IDENTIFIED](NAME, EC, CAS) VALUES (@NAME, @EC, @CAS)";
+
+            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\SUBS.txt");
+            string line;
+            conn.Open();
+            while ((line = reader.ReadLine()) != null)
+            {
+                string[] split = line.Split("|");
+                for (int i = 1; i < 3; i++)
+                {
+                    if (split[i] == "-") split[i] = "NULL";
+                }
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@NAME", split[0]);
+                cmd.Parameters.AddWithValue("@EC", split[1]);
+                cmd.Parameters.AddWithValue("@CAS", split[2]);
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();
             }
