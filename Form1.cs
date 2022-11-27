@@ -24,10 +24,10 @@ namespace ScraperTest_2
         BackgroundWorker bgw;
         string url = "https://echa.europa.eu/el/information-on-chemicals/cl-inventory-database?p_p_id=dissclinventory_WAR_dissclinventoryportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_dissclinventory_WAR_dissclinventoryportlet_jspPage=%2Fhtml%2Fsearch%2Fsearch.jsp&_dissclinventory_WAR_dissclinventoryportlet_searching=true&_dissclinventory_WAR_dissclinventoryportlet_iterating=true&_dissclinventory_WAR_dissclinventoryportlet_criteriaParam=_dissclinventory_WAR_dissclinventoryportlet_criteriaKeytcZP&_dissclinventory_WAR_dissclinventoryportlet_delta=50&_dissclinventory_WAR_dissclinventoryportlet_orderByCol=&_dissclinventory_WAR_dissclinventoryportlet_orderByType=asc&_dissclinventory_WAR_dissclinventoryportlet_resetCur=false&_dissclinventory_WAR_dissclinventoryportlet_cur=";
         int max = 1;
+        string folder = "C:\\Users\\giann\\Desktop\\s";
         public Form1()
         {
             InitializeComponent();
-
         }
 
 
@@ -107,7 +107,7 @@ namespace ScraperTest_2
 
                 try
                 {
-                    StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\NAMES.txt", true);
+                    StreamWriter writer = new StreamWriter(folder + "\\NAMES.txt", true);
                     var k = from a in d.DocumentNode.SelectNodes("//a[@class='substanceNameLink']")
                             where a.GetAttributeValue("href") != ""
                             select a;
@@ -155,7 +155,7 @@ namespace ScraperTest_2
                         string line = b.InnerText.Trim();
                         //MessageBox.Show(line);
 
-                        StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\EC.txt", true);
+                        StreamWriter writer = new StreamWriter(folder + "//EC.txt", true);
                         writer.Write(line + Environment.NewLine);
                         writer.Close();
                         EcProgress.Value += 1;
@@ -193,7 +193,7 @@ namespace ScraperTest_2
                         string line = b.InnerText.Trim();
                         //MessageBox.Show(line);
 
-                        StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\CAS.txt", true);
+                        StreamWriter writer = new StreamWriter(folder + "\\CAS.txt", true);
                         writer.Write(line + Environment.NewLine);
                         writer.Close();
                         CasProgress.Value += 1;
@@ -226,7 +226,7 @@ namespace ScraperTest_2
                     {
                         var a = cell.Descendants("span");
 
-                        StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\CLASS.txt", true);
+                        StreamWriter writer = new StreamWriter(folder + "\\CLASS.txt", true);
 
                         string line = "";
                         int i = 1;
@@ -272,7 +272,7 @@ namespace ScraperTest_2
                                 where c.GetAttributeValue("title", "") != ""
                                 select c;
 
-                        StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\IMAGES.txt", true);
+                        StreamWriter writer = new StreamWriter(folder + "\\IMAGES.txt", true);
 
                         string line = "";
                         int i = 1;
@@ -317,7 +317,7 @@ namespace ScraperTest_2
                 var s = d.DocumentNode.SelectNodes("//td[@class='table-cell  text-top']");
                 int count = s.ToList().Count();
 
-                StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\SOURCE.txt", true);
+                StreamWriter writer = new StreamWriter(folder + "\\SOURCE.txt", true);
 
                 for (int i = 3; i < count; i += 4)
                 {
@@ -348,7 +348,7 @@ namespace ScraperTest_2
 
                 int count = s.ToList().Count();
 
-                StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\DETAILS.txt", true);
+                StreamWriter writer = new StreamWriter(folder + "\\DETAILS.txt", true);
 
                 for (int i = 0; i < count; i++) 
                 {
