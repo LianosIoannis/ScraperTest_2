@@ -21,7 +21,15 @@ namespace ScraperTest_2
 
     public partial class Form1 : Form
     {
-        BackgroundWorker bgw;
+        BackgroundWorker bgwNAMES = new BackgroundWorker();
+        BackgroundWorker bgwEC = new BackgroundWorker();
+        BackgroundWorker bgwCAS = new BackgroundWorker();
+        BackgroundWorker bgwCLASS = new BackgroundWorker();
+        BackgroundWorker bgwIMAGES = new BackgroundWorker();
+        BackgroundWorker bgwSOURCE = new BackgroundWorker();
+        BackgroundWorker bgwDETAILS = new BackgroundWorker();
+
+
         string url = "https://echa.europa.eu/el/information-on-chemicals/cl-inventory-database?p_p_id=dissclinventory_WAR_dissclinventoryportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_dissclinventory_WAR_dissclinventoryportlet_jspPage=%2Fhtml%2Fsearch%2Fsearch.jsp&_dissclinventory_WAR_dissclinventoryportlet_searching=true&_dissclinventory_WAR_dissclinventoryportlet_iterating=true&_dissclinventory_WAR_dissclinventoryportlet_criteriaParam=_dissclinventory_WAR_dissclinventoryportlet_criteriaKeytcZP&_dissclinventory_WAR_dissclinventoryportlet_delta=50&_dissclinventory_WAR_dissclinventoryportlet_orderByCol=&_dissclinventory_WAR_dissclinventoryportlet_orderByType=asc&_dissclinventory_WAR_dissclinventoryportlet_resetCur=false&_dissclinventory_WAR_dissclinventoryportlet_cur=";
         int max = 1;
         public Form1()
@@ -57,44 +65,54 @@ namespace ScraperTest_2
             SourceText.Text = "...";
             DetailsText.Text = "...";
 
-            //bgw = new BackgroundWorker();
 
+            bgwNAMES.DoWork += new DoWorkEventHandler(find_Names);
+            bgwNAMES.ProgressChanged += new ProgressChangedEventHandler(NamesProgressChanged);
+            bgwNAMES.RunWorkerCompleted += new RunWorkerCompletedEventHandler(NamesCompleted);
+            bgwNAMES.WorkerReportsProgress = true;
+            bgwNAMES.RunWorkerAsync();
 
+            bgwEC.DoWork += new DoWorkEventHandler(find_EC);
+            bgwEC.ProgressChanged += new ProgressChangedEventHandler(ECProgressChanged);
+            bgwEC.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ECCompleted);
+            bgwEC.WorkerReportsProgress = true;
+            bgwEC.RunWorkerAsync();
 
-            //async Task Run(() => find_Names());
-            //await Task.Run(() => find_EC());
-            //await Task.Run(() => find_CAS());
-            //await Task.Run(() => find_CLASS());
-            //await Task.Run(() => find_IMAGES());
-            //await Task.Run(() => find_SOURCE());
-            //await Task.Run(() => find_DETAILS());
+            bgwCAS.DoWork += new DoWorkEventHandler(find_CAS);
+            bgwCAS.ProgressChanged += new ProgressChangedEventHandler(CASProgressChanged);
+            bgwCAS.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CASCompleted);
+            bgwCAS.WorkerReportsProgress = true;
+            bgwCAS.RunWorkerAsync();
 
-            //Thread t1 = new Thread(find_Names);
-            //t1.Start();
-            //Thread t2 = new Thread(find_Names);
-            //Thread t3 = new Thread(find_Names);
-            //Thread t4 = new Thread(find_Names);
-            //Thread t5 = new Thread(find_Names);
-            //Thread t6 = new Thread(find_Names);
-            //Thread t7 = new Thread(find_Names);
+            bgwCLASS.DoWork += new DoWorkEventHandler(find_CLASS);
+            bgwCLASS.ProgressChanged += new ProgressChangedEventHandler(CLASSProgressChanged);
+            bgwCLASS.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CLASSCompleted);
+            bgwCLASS.WorkerReportsProgress = true;
+            bgwCLASS.RunWorkerAsync();
 
+            bgwSOURCE.DoWork += new DoWorkEventHandler(find_SOURCE);
+            bgwSOURCE.ProgressChanged += new ProgressChangedEventHandler(SOURCEProgressChanged);
+            bgwSOURCE.RunWorkerCompleted += new RunWorkerCompletedEventHandler(SOURCECompleted);
+            bgwSOURCE.WorkerReportsProgress = true;
+            bgwSOURCE.RunWorkerAsync();
 
-            //new Task(find_Names).Start();
+            bgwIMAGES.DoWork += new DoWorkEventHandler(find_IMAGES);
+            bgwIMAGES.ProgressChanged += new ProgressChangedEventHandler(IMAGESProgressChanged);
+            bgwIMAGES.RunWorkerCompleted += new RunWorkerCompletedEventHandler(IMAGESCompleted);
+            bgwIMAGES.WorkerReportsProgress = true;
+            bgwIMAGES.RunWorkerAsync();
 
-            find_Names();
-            find_EC();
-            find_CAS();
-            find_CLASS();
-            find_IMAGES();
-            find_SOURCE();
-            find_DETAILS();
-
-            //Parallel.Invoke(find_Names, find_EC, find_CAS, find_DETAILS, find_CLASS,find_IMAGES, find_DETAILS, find_SOURCE);    
+            bgwDETAILS.DoWork += new DoWorkEventHandler(find_DETAILS);
+            bgwDETAILS.ProgressChanged += new ProgressChangedEventHandler(DETAILSProgressChanged);
+            bgwDETAILS.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DETAILSCompleted);
+            bgwDETAILS.WorkerReportsProgress = true;
+            bgwDETAILS.RunWorkerAsync();
+ 
         }
 
        
             
-        private void find_Names()
+        private void find_Names(object sender, EventArgs e)
         {
             string new_url;
 
@@ -117,7 +135,8 @@ namespace ScraperTest_2
                         //MessageBox.Show(cell.InnerText.Trim());
                         writer.WriteLine(cell.InnerText.Trim());
                         //NamesProgress.BeginInvoke(new InvokeDelegate(InvokeMethod));
-                        NamesProgress.Value += 1;
+                        //NamesProgress.Value += 1;
+                        bgwNAMES.ReportProgress(0);
                     }
 
                     writer.Close();
@@ -130,10 +149,20 @@ namespace ScraperTest_2
 
 
             //MessageBox.Show("NAMES FOUND !");
+            //NamesText.Text = "OK";
+        }
+
+        private void NamesProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            NamesProgress.Value += 1;
+        }
+
+        private void NamesCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             NamesText.Text = "OK";
         }
 
-        private void find_EC()
+        private void find_EC(object sender, EventArgs e)
         {
 
             string new_url;
@@ -158,7 +187,8 @@ namespace ScraperTest_2
                         StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\EC.txt", true);
                         writer.Write(line + Environment.NewLine);
                         writer.Close();
-                        EcProgress.Value += 1;
+                        //EcProgress.Value += 1;
+                        bgwEC.ReportProgress(0);
                     }
                 }
                 catch (Exception ex)
@@ -168,11 +198,21 @@ namespace ScraperTest_2
             }
             
             //MessageBox.Show("EC FOUND !");
-            EcText.Text = "OK";
+            //EcText.Text = "OK";
 
         }
 
-        private void find_CAS()
+        private void ECProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            EcProgress.Value += 1;
+        }
+
+        private void ECCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            EcText.Text = "OK";
+        }
+
+        private void find_CAS(object sender, EventArgs e)
         {
             string new_url;
 
@@ -196,7 +236,8 @@ namespace ScraperTest_2
                         StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\CAS.txt", true);
                         writer.Write(line + Environment.NewLine);
                         writer.Close();
-                        CasProgress.Value += 1;
+                        //CasProgress.Value += 1;
+                        bgwCAS.ReportProgress(0);   
                     }
                 }
                 catch (Exception ex)
@@ -206,10 +247,20 @@ namespace ScraperTest_2
             }
 
             //MessageBox.Show("CAS FOUND !");
+            //CasText.Text = "OK";
+        }
+
+        private void CASProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            CasProgress.Value += 1;
+        }
+
+        private void CASCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             CasText.Text = "OK";
         }
 
-        private void find_CLASS()
+        private void find_CLASS(object sender, EventArgs e)
         {
             string new_url;
 
@@ -240,7 +291,8 @@ namespace ScraperTest_2
                         if (line == "") line = "NULL";
                         writer.WriteLine(line);
                         writer.Close();
-                        ClassProgress.Value += 1;
+                        //ClassProgress.Value += 1;
+                        bgwCLASS.ReportProgress(0);
                     }
                 }
                 catch (Exception ex)
@@ -250,10 +302,20 @@ namespace ScraperTest_2
             }
 
             //MessageBox.Show("CLASS FOUND !");
+            //ClassText.Text = "OK";
+        }
+
+        private void CLASSProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            ClassProgress.Value += 1;
+        }
+
+        private void CLASSCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             ClassText.Text = "OK";
         }
 
-        private void find_IMAGES()
+        private void find_IMAGES(object sender, EventArgs e)
         {
             string new_url;
 
@@ -289,7 +351,8 @@ namespace ScraperTest_2
                         if (line == "") line = "NULL";
                         writer.WriteLine(line);
                         writer.Close();
-                        ImagesProgress.Value += 1;
+                        //ImagesProgress.Value += 1;
+                        bgwIMAGES.ReportProgress(0);    
                     }
                 }
                 catch (Exception ex)
@@ -299,10 +362,20 @@ namespace ScraperTest_2
             }
 
             //MessageBox.Show("IMAGES FOUND !");
+            //ImagesText.Text = "OK";
+        }
+
+        private void IMAGESProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            ImagesProgress.Value += 1;
+        }
+
+        private void IMAGESCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             ImagesText.Text = "OK";
         }
 
-        private void find_SOURCE()
+        private void find_SOURCE(object sender, EventArgs e)
         {
 
             string new_url;
@@ -322,16 +395,27 @@ namespace ScraperTest_2
                 for (int i = 3; i < count; i += 4)
                 {
                     writer.WriteLine(s.ElementAt(i).InnerText.Trim());
-                    SourceProgress.Value += 1;
+                    //SourceProgress.Value += 1;
+                    bgwSOURCE.ReportProgress(0);
                 }
                 writer.Close();
             }
 
             //MessageBox.Show("SOURCE FOUND !");
+            //SourceText.Text = "OK";
+        }
+
+        private void SOURCEProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            SourceProgress.Value += 1;
+        }
+
+        private void SOURCECompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             SourceText.Text = "OK";
         }
 
-        private void find_DETAILS()
+        private void find_DETAILS(object sender, EventArgs e)
         {
             string new_url;
 
@@ -353,14 +437,27 @@ namespace ScraperTest_2
                 for (int i = 0; i < count; i++) 
                 {
                     writer.WriteLine(s.ElementAt(i).GetAttributeValue("href").Trim());
-                    DetailsProgress.Value += 1;
+                    //DetailsProgress.Value += 1;
+                    bgwDETAILS.ReportProgress(0);   
                 }
                 writer.Close();
             }
 
             //MessageBox.Show("DETAILS FOUND !");
+            //DetailsText.Text = "OK";
+        }
+
+        private void DETAILSProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            DetailsProgress.Value += 1;
+        }
+
+        private void DETAILSCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             DetailsText.Text = "OK";
         }
+
+        //================= RETRIEVE ===============================================================================
 
         private void ClearButton_Click(object sender, EventArgs e)
         {
