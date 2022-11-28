@@ -841,7 +841,8 @@ namespace ScraperTest_2
             string xlpath = "C:\\Users\\User\\Desktop\\ChemList.xlsx";
             var stream = File.Open(xlpath, FileMode.Open, FileAccess.Read);
             var reader = ExcelReaderFactory.CreateReader(stream);
-
+            
+           
             var result = reader.AsDataSet();
             Form3 f3 = new Form3(result);
             f3.ShowDialog();

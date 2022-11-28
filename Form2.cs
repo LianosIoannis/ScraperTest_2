@@ -13,6 +13,8 @@ namespace ScraperTest_2
 {
     public partial class Form2 : Form
     {
+
+        string folder = "C:\\Users\\User\\Desktop\\s";
         public Form2()
         {
             InitializeComponent();
@@ -21,13 +23,13 @@ namespace ScraperTest_2
 
         private void View_Data()
         {
-            var names = File.ReadAllLines("C:\\Users\\User\\Desktop\\s\\NAMES.txt");
-            var ec = File.ReadAllLines("C:\\Users\\User\\Desktop\\s\\EC.txt");
-            var cas = File.ReadAllLines("C:\\Users\\User\\Desktop\\s\\CAS.txt");
-            var clas = File.ReadAllLines("C:\\Users\\User\\Desktop\\s\\CLASS.txt");
-            var images = File.ReadAllLines("C:\\Users\\User\\Desktop\\s\\IMAGES.txt");
-            var source = File.ReadAllLines("C:\\Users\\User\\Desktop\\s\\SOURCE.txt");
-            var details = File.ReadAllLines("C:\\Users\\User\\Desktop\\s\\DETAILS.txt");
+            var names = File.ReadAllLines(folder + "\\NAMES.txt");
+            var ec = File.ReadAllLines(folder + "\\EC.txt");
+            var cas = File.ReadAllLines(folder + "\\CAS.txt");
+            var clas = File.ReadAllLines(folder + "\\CLASS.txt");
+            var images = File.ReadAllLines(folder + "\\IMAGES.txt");
+            var source = File.ReadAllLines(folder + "\\SOURCE.txt");
+            var details = File.ReadAllLines(folder + "\\DETAILS.txt");
 
             CLGridView.ColumnCount= 8;
             CLGridView.Columns[0].Name = "ECHAID";
