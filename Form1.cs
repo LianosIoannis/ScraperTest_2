@@ -768,11 +768,8 @@ namespace ScraperTest_2
             f3.ShowDialog();
             stream.Dispose();
             reader.Dispose();
-        }
+        }//READS EXCEL FILE AND OPENS FORM3 TO SHOW DATA
 
-        private void AddXltoDbBtn_Click(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }
