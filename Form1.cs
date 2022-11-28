@@ -15,6 +15,7 @@ using Microsoft.VisualBasic;
 using HtmlAgilityPack.CssSelectors.NetCore;
 using System.ComponentModel;
 using ExcelDataReader;
+using AngleSharp.Io;
 
 namespace ScraperTest_2
 {
@@ -33,7 +34,7 @@ namespace ScraperTest_2
 
         string url = "https://echa.europa.eu/el/information-on-chemicals/cl-inventory-database?p_p_id=dissclinventory_WAR_dissclinventoryportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_dissclinventory_WAR_dissclinventoryportlet_jspPage=%2Fhtml%2Fsearch%2Fsearch.jsp&_dissclinventory_WAR_dissclinventoryportlet_searching=true&_dissclinventory_WAR_dissclinventoryportlet_iterating=true&_dissclinventory_WAR_dissclinventoryportlet_criteriaParam=_dissclinventory_WAR_dissclinventoryportlet_criteriaKeytcZP&_dissclinventory_WAR_dissclinventoryportlet_delta=50&_dissclinventory_WAR_dissclinventoryportlet_orderByCol=&_dissclinventory_WAR_dissclinventoryportlet_orderByType=asc&_dissclinventory_WAR_dissclinventoryportlet_resetCur=false&_dissclinventory_WAR_dissclinventoryportlet_cur=";
         int max = 1;
-        string folder = "C:\\Users\\giann\\Desktop\\s";
+        string folder = "C:\\Users\\User\\Desktop";
         public Form1()
         {
             InitializeComponent();
@@ -125,14 +126,29 @@ namespace ScraperTest_2
         private void find_Names(object sender, EventArgs e)
         {
             string new_url;
+            bool loaded = true;
 
             for (int i = 0; i < max; i++)
             {
+                if (loaded == false)
+                {
+                    i--;
+                    loaded = true;
+                }
                 new_url = url + (i+1).ToString();
 
                 HtmlWeb web = new HtmlWeb();
-                HtmlAgilityPack.HtmlDocument d = web.Load(new_url);
-
+                HtmlAgilityPack.HtmlDocument d;
+                try
+                {
+                    d = web.Load(new_url);
+                }
+                catch (Exception ex)
+                {
+                    loaded = false;
+                    continue;
+                }
+                              
                 try
                 {
                     StreamWriter writer = new StreamWriter(folder + "\\NAMES.txt", true);
@@ -142,10 +158,7 @@ namespace ScraperTest_2
 
                     foreach (var cell in k)
                     {
-                        //MessageBox.Show(cell.InnerText.Trim());
                         writer.WriteLine(cell.InnerText.Trim());
-                        //NamesProgress.BeginInvoke(new InvokeDelegate(InvokeMethod));
-                        //NamesProgress.Value += 1;
                         bgwNAMES.ReportProgress(0);
                     }
 
@@ -156,10 +169,6 @@ namespace ScraperTest_2
                     MessageBox.Show(ex.Message.ToString());
                 }
             }
-
-
-            //MessageBox.Show("NAMES FOUND !");
-            //NamesText.Text = "OK";
         }
 
         private void NamesProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -176,13 +185,29 @@ namespace ScraperTest_2
         {
 
             string new_url;
+            bool loaded = true;
 
             for (int i = 0; i < max; i++)
             {
+
+                if (loaded == false)
+                {
+                    i--;
+                    loaded = true;
+                }
                 new_url = url + (i + 1).ToString();
 
                 HtmlWeb web = new HtmlWeb();
-                HtmlAgilityPack.HtmlDocument d = web.Load(new_url);
+                HtmlAgilityPack.HtmlDocument d;
+                try
+                {
+                    d = web.Load(new_url);
+                }
+                catch (Exception ex)
+                {
+                    loaded = false;
+                    continue;
+                }
 
                 try
                 {
@@ -192,12 +217,9 @@ namespace ScraperTest_2
                         var b = a[3];
 
                         string line = b.InnerText.Trim();
-                        //MessageBox.Show(line);
-
                         StreamWriter writer = new StreamWriter(folder + "//EC.txt", true);
                         writer.Write(line + Environment.NewLine);
                         writer.Close();
-                        //EcProgress.Value += 1;
                         bgwEC.ReportProgress(0);
                     }
                 }
@@ -206,10 +228,6 @@ namespace ScraperTest_2
                     MessageBox.Show(ex.Message.ToString());
                 }
             }
-            
-            //MessageBox.Show("EC FOUND !");
-            //EcText.Text = "OK";
-
         }
 
         private void ECProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -225,13 +243,29 @@ namespace ScraperTest_2
         private void find_CAS(object sender, EventArgs e)
         {
             string new_url;
+            bool loaded = true;
 
             for (int i = 0; i < max; i++)
             {
+
+                if (loaded == false)
+                {
+                    i--;
+                    loaded = true;
+                }
                 new_url = url + (i + 1).ToString();
 
                 HtmlWeb web = new HtmlWeb();
-                HtmlAgilityPack.HtmlDocument d = web.Load(new_url);
+                HtmlAgilityPack.HtmlDocument d;
+                try
+                {
+                    d = web.Load(new_url);
+                }
+                catch (Exception ex)
+                {
+                    loaded = false;
+                    continue;
+                }
 
                 try
                 {
@@ -241,12 +275,9 @@ namespace ScraperTest_2
                         var b = a[5];
 
                         string line = b.InnerText.Trim();
-                        //MessageBox.Show(line);
-
                         StreamWriter writer = new StreamWriter(folder + "\\CAS.txt", true);
                         writer.Write(line + Environment.NewLine);
                         writer.Close();
-                        //CasProgress.Value += 1;
                         bgwCAS.ReportProgress(0);   
                     }
                 }
@@ -255,9 +286,6 @@ namespace ScraperTest_2
                     MessageBox.Show(ex.Message.ToString());
                 }
             }
-
-            //MessageBox.Show("CAS FOUND !");
-            //CasText.Text = "OK";
         }
 
         private void CASProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -273,13 +301,29 @@ namespace ScraperTest_2
         private void find_CLASS(object sender, EventArgs e)
         {
             string new_url;
+            bool loaded = true;
 
             for (int j = 0; j < max; j++)
             {
+
+                if (loaded == false)
+                {
+                    j--;
+                    loaded = true;
+                }
                 new_url = url + (j + 1).ToString();
 
                 HtmlWeb web = new HtmlWeb();
-                HtmlAgilityPack.HtmlDocument d = web.Load(new_url);
+                HtmlAgilityPack.HtmlDocument d;
+                try
+                {
+                    d = web.Load(new_url);
+                }
+                catch (Exception ex)
+                {
+                    loaded = false;
+                    continue;
+                }
 
                 try
                 {
@@ -301,7 +345,6 @@ namespace ScraperTest_2
                         if (line == "") line = "NULL";
                         writer.WriteLine(line);
                         writer.Close();
-                        //ClassProgress.Value += 1;
                         bgwCLASS.ReportProgress(0);
                     }
                 }
@@ -310,9 +353,6 @@ namespace ScraperTest_2
                     MessageBox.Show(ex.Message.ToString());
                 }
             }
-
-            //MessageBox.Show("CLASS FOUND !");
-            //ClassText.Text = "OK";
         }
 
         private void CLASSProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -328,13 +368,28 @@ namespace ScraperTest_2
         private void find_IMAGES(object sender, EventArgs e)
         {
             string new_url;
+            bool loaded = true;
 
             for (int j = 0; j < max; j++)
             {
+                if (loaded == false)
+                {
+                    j--;
+                    loaded = true;
+                }
                 new_url = url + (j + 1).ToString();
 
                 HtmlWeb web = new HtmlWeb();
-                HtmlAgilityPack.HtmlDocument d = web.Load(new_url);
+                HtmlAgilityPack.HtmlDocument d;
+                try
+                {
+                    d = web.Load(new_url);
+                }
+                catch (Exception ex)
+                {
+                    loaded = false;
+                    continue;
+                }
 
                 try
                 {
@@ -361,7 +416,6 @@ namespace ScraperTest_2
                         if (line == "") line = "NULL";
                         writer.WriteLine(line);
                         writer.Close();
-                        //ImagesProgress.Value += 1;
                         bgwIMAGES.ReportProgress(0);    
                     }
                 }
@@ -370,9 +424,6 @@ namespace ScraperTest_2
                     MessageBox.Show(ex.Message.ToString());
                 }
             }
-
-            //MessageBox.Show("IMAGES FOUND !");
-            //ImagesText.Text = "OK";
         }
 
         private void IMAGESProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -389,13 +440,29 @@ namespace ScraperTest_2
         {
 
             string new_url;
+            bool loaded = true;
 
             for (int j = 0; j < max; j++)
             {
+
+                if (loaded == false)
+                {
+                    j--;
+                    loaded = true;
+                }
                 new_url = url + (j + 1).ToString();
 
                 HtmlWeb web = new HtmlWeb();
-                HtmlAgilityPack.HtmlDocument d = web.Load(new_url);
+                HtmlAgilityPack.HtmlDocument d;
+                try
+                {
+                    d = web.Load(new_url);
+                }
+                catch (Exception ex)
+                {
+                    loaded = false;
+                    continue;
+                }
 
                 var s = d.DocumentNode.SelectNodes("//td[@class='table-cell  text-top']");
                 int count = s.ToList().Count();
@@ -405,14 +472,10 @@ namespace ScraperTest_2
                 for (int i = 3; i < count; i += 4)
                 {
                     writer.WriteLine(s.ElementAt(i).InnerText.Trim());
-                    //SourceProgress.Value += 1;
                     bgwSOURCE.ReportProgress(0);
                 }
                 writer.Close();
             }
-
-            //MessageBox.Show("SOURCE FOUND !");
-            //SourceText.Text = "OK";
         }
 
         private void SOURCEProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -428,13 +491,29 @@ namespace ScraperTest_2
         private void find_DETAILS(object sender, EventArgs e)
         {
             string new_url;
+            bool loaded = true;
 
             for (int j = 0; j < max; j++)
             {
+
+                if (loaded == false)
+                {
+                    j--;
+                    loaded = true;
+                }
                 new_url = url + (j + 1).ToString();
 
                 HtmlWeb web = new HtmlWeb();
-                HtmlAgilityPack.HtmlDocument d = web.Load(new_url);
+                HtmlAgilityPack.HtmlDocument d;
+                try
+                {
+                    d = web.Load(new_url);
+                }
+                catch (Exception ex)
+                {
+                    loaded = false;
+                    continue;
+                }
 
                 var s = from k in d.DocumentNode.SelectNodes("//a[@class='details']")
                         where k.GetAttributeValue("title") == "View notifications"
@@ -447,14 +526,10 @@ namespace ScraperTest_2
                 for (int i = 0; i < count; i++) 
                 {
                     writer.WriteLine(s.ElementAt(i).GetAttributeValue("href").Trim());
-                    //DetailsProgress.Value += 1;
                     bgwDETAILS.ReportProgress(0);   
                 }
                 writer.Close();
             }
-
-            //MessageBox.Show("DETAILS FOUND !");
-            //DetailsText.Text = "OK";
         }
 
         private void DETAILSProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -561,7 +636,7 @@ namespace ScraperTest_2
             string m = Interaction.InputBox("Input Urls Count", "Input", "1");
             if (int.TryParse(m, out int v))
             {
-                if (v > 0 && v <= 4279) max = v;
+                if (v > 0 && v <= 4282) max = v;
                 else MessageBox.Show("WRONG NUMBER !");
             }
             else MessageBox.Show("WRONG FORMAT !");
@@ -571,10 +646,13 @@ namespace ScraperTest_2
         private void TestBtn_Click(object sender, EventArgs e)
         {
             StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\DETAILS.txt");
+            StreamReader name = new StreamReader("C:\\Users\\User\\Desktop\\NAMES.txt");
             string details_url;
 
-            while ((details_url = reader.ReadLine()) != null)
+            while ((details_url = reader.ReadLine()) != null)            
             {
+                string n = name.ReadLine().Trim();
+
                 HtmlWeb web = new HtmlWeb();
                 HtmlAgilityPack.HtmlDocument d = web.Load(details_url);
 
@@ -627,7 +705,7 @@ namespace ScraperTest_2
                     if (line != "")
                     {
                         StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\HAZARDS.txt", true);
-                        writer.WriteLine(details_url.Split('/').Last() + "|" + line);
+                        writer.WriteLine(details_url.Split('/').Last() + "|" + n + "|" + line);
                         writer.Close();
                     }
                 }
@@ -642,7 +720,7 @@ namespace ScraperTest_2
         {
             string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             SqlConnection conn = new SqlConnection(cstr);
-            string sql = "INSERT INTO [HAZARDS](URL, HCATEGORY, HSTATEMENT1, HSTATEMENT2) VALUES (@URL, @HCATEGORY, @HSTATEMENT1, @HSTATEMENT2)";
+            string sql = "INSERT INTO [HAZARDS](CURL, NAME, HCATEGORY, HSTATEMENT1, HSTATEMENT2) VALUES (@CURL, @NAME, @HCATEGORY, @HSTATEMENT1, @HSTATEMENT2)";
 
             StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\HAZARDS.txt");
             string line;
@@ -650,17 +728,18 @@ namespace ScraperTest_2
             while ((line = reader.ReadLine()) != null)
             {
                 string[] split = line.Split("|");
-                if (split.Length >= 5)
+                if (split.Length >= 6)
                 {
-                    for (int i = 4; i < split.Length; i++) split[3] += "|" + split[i];
+                    for (int i = 5; i < split.Length; i++) split[4] += "|" + split[i];
                 }  
                 
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
-                cmd.Parameters.AddWithValue("@URL", split[0]);
-                cmd.Parameters.AddWithValue("@HCATEGORY", split[1]);
-                cmd.Parameters.AddWithValue("@HSTATEMENT1", split[2]);
-                cmd.Parameters.AddWithValue("@HSTATEMENT2", split[3]);
+                cmd.Parameters.AddWithValue("@CURL", split[0]);
+                cmd.Parameters.AddWithValue("@NAME", split[1]);
+                cmd.Parameters.AddWithValue("@HCATEGORY", split[2]);
+                cmd.Parameters.AddWithValue("@HSTATEMENT1", split[3]);
+                cmd.Parameters.AddWithValue("@HSTATEMENT2", split[4]);
 
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();
