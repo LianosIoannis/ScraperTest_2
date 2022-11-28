@@ -1,6 +1,6 @@
 ﻿namespace ScraperTest_2
 {
-    partial class Form2
+    partial class Form3
     {
         /// <summary>
         /// Required designer variable.
@@ -28,50 +28,50 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.CLGridView = new System.Windows.Forms.DataGridView();
+            this.ExcelGridView = new System.Windows.Forms.DataGridView();
             this.AddGridToDbBtn = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.CLGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ExcelGridView)).BeginInit();
             this.SuspendLayout();
             // 
-            // CLGridView
+            // ExcelGridView
             // 
-            this.CLGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.CLGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.CLGridView.Location = new System.Drawing.Point(12, 53);
-            this.CLGridView.Name = "CLGridView";
-            this.CLGridView.ReadOnly = true;
-            this.CLGridView.RowHeadersVisible = false;
-            this.CLGridView.RowTemplate.Height = 25;
-            this.CLGridView.Size = new System.Drawing.Size(1060, 576);
-            this.CLGridView.TabIndex = 0;
+            this.ExcelGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.ExcelGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ExcelGridView.Location = new System.Drawing.Point(12, 53);
+            this.ExcelGridView.Name = "ExcelGridView";
+            this.ExcelGridView.ReadOnly = true;
+            this.ExcelGridView.RowHeadersVisible = false;
+            this.ExcelGridView.RowTemplate.Height = 25;
+            this.ExcelGridView.Size = new System.Drawing.Size(1060, 576);
+            this.ExcelGridView.TabIndex = 1;
             // 
             // AddGridToDbBtn
             // 
             this.AddGridToDbBtn.Location = new System.Drawing.Point(12, 24);
             this.AddGridToDbBtn.Name = "AddGridToDbBtn";
             this.AddGridToDbBtn.Size = new System.Drawing.Size(184, 23);
-            this.AddGridToDbBtn.TabIndex = 1;
+            this.AddGridToDbBtn.TabIndex = 2;
             this.AddGridToDbBtn.Text = "ADD TO TABLE";
             this.AddGridToDbBtn.UseVisualStyleBackColor = true;
             this.AddGridToDbBtn.Click += new System.EventHandler(this.AddGridToDbBtn_Click);
             // 
-            // Form2
+            // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1084, 641);
             this.Controls.Add(this.AddGridToDbBtn);
-            this.Controls.Add(this.CLGridView);
-            this.Name = "Form2";
-            this.Text = "Form2";
-            ((System.ComponentModel.ISupportInitialize)(this.CLGridView)).EndInit();
+            this.Controls.Add(this.ExcelGridView);
+            this.Name = "Form3";
+            this.Text = "Form3";
+            ((System.ComponentModel.ISupportInitialize)(this.ExcelGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private DataGridView CLGridView;
+        private DataGridView ExcelGridView;
         private Button AddGridToDbBtn;
     }
 }

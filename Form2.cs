@@ -29,43 +29,43 @@ namespace ScraperTest_2
             var source = File.ReadAllLines("C:\\Users\\User\\Desktop\\s\\SOURCE.txt");
             var details = File.ReadAllLines("C:\\Users\\User\\Desktop\\s\\DETAILS.txt");
 
-            dataGridView1.ColumnCount= 8;
-            dataGridView1.Columns[0].Name = "INDEX";
-            dataGridView1.Columns[1].Name = "NAME";
-            dataGridView1.Columns[2].Name = "EC";
-            dataGridView1.Columns[3].Name = "CAS";
-            dataGridView1.Columns[4].Name = "CLASS";
-            dataGridView1.Columns[5].Name = "IMAGES";
-            dataGridView1.Columns[6].Name = "SOURCE";
-            dataGridView1.Columns[7].Name = "DETAILS";
+            CLGridView.ColumnCount= 8;
+            CLGridView.Columns[0].Name = "ECHAID";
+            CLGridView.Columns[1].Name = "NAME";
+            CLGridView.Columns[2].Name = "EC";
+            CLGridView.Columns[3].Name = "CAS";
+            CLGridView.Columns[4].Name = "CLASS";
+            CLGridView.Columns[5].Name = "IMAGES";
+            CLGridView.Columns[6].Name = "SOURCE";
+            CLGridView.Columns[7].Name = "DETAILS";
 
 
             //MessageBox.Show(names.Length.ToString());
-            dataGridView1.RowCount= names.Length;   
+            CLGridView.RowCount= names.Length;   
 
             for (int i = 0; i < names.Length; i++)
             {
-                dataGridView1.Rows[i].Cells[0].Value = (i+1).ToString();
-                dataGridView1.Rows[i].Cells[1].Value = names[i];
-                dataGridView1.Rows[i].Cells[2].Value = ec[i];
-                dataGridView1.Rows[i].Cells[3].Value = cas[i];
-                dataGridView1.Rows[i].Cells[4].Value = clas[i];
-                dataGridView1.Rows[i].Cells[5].Value = images[i];
-                dataGridView1.Rows[i].Cells[6].Value = source[i];
-                dataGridView1.Rows[i].Cells[7].Value = details[i];
+                CLGridView.Rows[i].Cells[0].Value = (i+1).ToString();
+                CLGridView.Rows[i].Cells[1].Value = names[i];
+                CLGridView.Rows[i].Cells[2].Value = ec[i];
+                CLGridView.Rows[i].Cells[3].Value = cas[i];
+                CLGridView.Rows[i].Cells[4].Value = clas[i];
+                CLGridView.Rows[i].Cells[5].Value = images[i];
+                CLGridView.Rows[i].Cells[6].Value = source[i];
+                CLGridView.Rows[i].Cells[7].Value = details[i];
             }
 
 
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void AddGridToDbBtn_Click(object sender, EventArgs e)
         {
             string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             DataTable dt = new DataTable();
 
-            foreach (DataGridViewColumn c in dataGridView1.Columns) dt.Columns.Add(c.Name);  
-            foreach (DataGridViewRow r in dataGridView1.Rows)
+            foreach (DataGridViewColumn c in CLGridView.Columns) dt.Columns.Add(c.Name);  
+            foreach (DataGridViewRow r in CLGridView.Rows)
             {
                 DataRow dr = dt.NewRow();
                 foreach (DataGridViewCell cell in r.Cells) dr[cell.ColumnIndex] = cell.Value;

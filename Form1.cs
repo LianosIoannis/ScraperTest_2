@@ -14,6 +14,7 @@ using System.Data;
 using Microsoft.VisualBasic;
 using HtmlAgilityPack.CssSelectors.NetCore;
 using System.ComponentModel;
+using ExcelDataReader;
 
 namespace ScraperTest_2
 {
@@ -39,7 +40,10 @@ namespace ScraperTest_2
         }
 
 
-        private async void button3_Click(object sender, EventArgs e)
+        //================= RETRIEVE ===============================================================================
+
+
+        private void RetrieveButton_Click(object sender, EventArgs e)
         {
             NamesProgress.Maximum = max * 50;
             EcProgress.Maximum = max * 50;
@@ -107,11 +111,17 @@ namespace ScraperTest_2
             bgwDETAILS.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DETAILSCompleted);
             bgwDETAILS.WorkerReportsProgress = true;
             bgwDETAILS.RunWorkerAsync();
- 
+
+            bgwNAMES.Dispose();
+            bgwEC.Dispose();
+            bgwCAS.Dispose();
+            bgwCLASS.Dispose();
+            bgwSOURCE.Dispose();
+            bgwIMAGES.Dispose();
+            bgwDETAILS.Dispose();
+
         }
 
-       
-            
         private void find_Names(object sender, EventArgs e)
         {
             string new_url;
@@ -469,15 +479,15 @@ namespace ScraperTest_2
             File.WriteAllText("C:\\Users\\User\\Desktop\\SOURCE.txt", String.Empty);
             File.WriteAllText("C:\\Users\\User\\Desktop\\DETAILS.txt", String.Empty);
             MessageBox.Show("CLEAR DONE !");
-        }
+        }//CLEARS (NAMES, EC, CAS, CLASS, ETAILS, SOURCE, IMAGES).txt FILES
 
-        private void button1_Click(object sender, EventArgs e)
+        private void ViewDataBtn_Click(object sender, EventArgs e)
         {
             Form2 f2 = new Form2();
             f2.ShowDialog();
-        }
+        }//OPENS FORM2 TO SHOW DATA TO DATAGRIDVIEW
 
-        private void button2_Click(object sender, EventArgs e)
+        private void DownLoadImagesBtn_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fd = new FolderBrowserDialog();
             fd.ShowDialog();
@@ -508,7 +518,7 @@ namespace ScraperTest_2
                 }
                 MessageBox.Show("DOWNLOAD COMPLETED !");
             }
-        }
+        }//DOWNLOADS HAZARD IMAGES TO SPECIFIED FOLDER
 
         private void Store_ImgToDB(string image_path)
         {
@@ -530,30 +540,7 @@ namespace ScraperTest_2
             }
             catch (Exception ex) { MessageBox.Show(ex.Message.ToString()); }
             conn.Close();
-        }
-
-        private void button3_Click_1(object sender, EventArgs e)
-        {
-            string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-            SqlConnection conn = new SqlConnection(cstr);
-            string sql = "INSERT INTO [IMAGES](NAME, IMAGE) VALUES (@NAME, @IMAGE)";
-            SqlCommand cmd = new SqlCommand(sql, conn);
-
-            string path = "C:\\Users\\User\\Desktop\\IMAGES\\ghs01.png";
-            string name = System.IO.Path.GetFileName(path);
-
-            byte[] img = GetImg(path);
-            cmd.Parameters.Add("@NAME", SqlDbType.Text).Value = name;
-            cmd.Parameters.Add("@IMAGE", SqlDbType.Image).Value = img;
-
-            conn.Open();
-            try
-            {
-                cmd.ExecuteNonQuery();
-            }
-            catch(Exception ex) { MessageBox.Show(ex.Message.ToString()); }
-            conn.Close();
-        }
+        }//STORES IMAGE TO TABLE = [IMAGES]
 
         private static byte[] GetImg(string filePath)
         {
@@ -567,9 +554,9 @@ namespace ScraperTest_2
             stream.Close();
 
             return photo;
-        }
+        }//RETURNS SPECIFIED IMAGE AS BYTE[]
 
-        private void button4_Click(object sender, EventArgs e)
+        private void SetCountBtn_Click(object sender, EventArgs e)
         {
             string m = Interaction.InputBox("Input Urls Count", "Input", "1");
             if (int.TryParse(m, out int v))
@@ -579,59 +566,9 @@ namespace ScraperTest_2
             }
             else MessageBox.Show("WRONG FORMAT !");
             
-        }
+        }//SET NUMBER OF PAGES TO READ FROM
 
-        private void button5_Click(object sender, EventArgs e)
-        {
-            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\DETAILS.txt");
-            string details_url;
-            while ((details_url = reader.ReadLine()) != null)
-            {
-                HtmlWeb web = new HtmlWeb();
-                HtmlAgilityPack.HtmlDocument d = web.Load(details_url);
-
-                var h = from k in d.DocumentNode.SelectNodes("//table")
-                        where k.GetAttributeValue("class") == "CLPtable taglib-search-iterator"
-                        select k;
-                var t = from l in h.ElementAt(0).Descendants("tr")
-                        where l.GetAttributeValue("class") == "results-row" || l.GetAttributeValue("class") == "results-row-alt"
-                        select l;
-
-
-                foreach (var c in t)
-                {
-                    string line = "";
-                    var v = c.Descendants("td").ElementAt(0).InnerText.Trim();
-
-                    line += String.Concat(v.Where(c => !Char.IsWhiteSpace(c)));
-
-                    if (v != "")
-                    {
-                        try
-                        {
-                            string temp = c.Descendants("td").ElementAt(1).Descendants("span").ElementAt(0).InnerText.Trim();
-                            line += "|" + String.Concat(temp.Where(c => !Char.IsWhiteSpace(c)));
-                        }
-                        catch (Exception ex)
-                        {
-                            line = "";
-                        }
-                    }
-                    if (line != "")
-                    {
-                        StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\HAZARDS.txt", true);
-                        writer.WriteLine(details_url.Split('/').Last() + "|" + line);
-                        writer.Close();
-                    }
-                }
-            }
-
-            reader.Close();
-            MessageBox.Show("DONE !");
-            
-        }
-
-        private void button6_Click(object sender, EventArgs e)
+        private void TestBtn_Click(object sender, EventArgs e)
         {
             StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\DETAILS.txt");
             string details_url;
@@ -660,9 +597,13 @@ namespace ScraperTest_2
 
                     try
                     {
-                        string temp = c.Descendants("td").ElementAt(1).Descendants("span").ElementAt(0).InnerText.Trim();
-                        if (temp == "") temp = "NULL";
-                        line += "|" + String.Concat(temp.Where(c => !Char.IsWhiteSpace(c)));
+                        string[] temp = c.Descendants("td").ElementAt(1).Descendants("span").ElementAt(0).InnerText.Trim().Split("+");
+                        if (temp.Length == 1 && temp[0] == "") temp[0] = "NULL";
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            line += "|" + String.Concat(temp[i].Where(c => !Char.IsWhiteSpace(c)));
+                        }
+                        
                     }
                     catch (Exception ex)
                     {
@@ -671,9 +612,12 @@ namespace ScraperTest_2
 
                     try
                     {
-                        string temp = c.Descendants("td").ElementAt(2).Descendants("span").ElementAt(0).InnerText.Trim();
-                        if (temp == "") temp = "NULL";
-                        line += "|" + String.Concat(temp.Where(c => !Char.IsWhiteSpace(c)));
+                        string[] temp = c.Descendants("td").ElementAt(2).Descendants("span").ElementAt(0).InnerText.Trim().Split("+");
+                        if (temp.Length == 1 && temp[0] == "") temp[0] = "NULL";
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            line += "|" + String.Concat(temp[i].Where(c => !Char.IsWhiteSpace(c)));
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -682,7 +626,7 @@ namespace ScraperTest_2
 
                     if (line != "")
                     {
-                        StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\HAZARDS1.txt", true);
+                        StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\HAZARDS.txt", true);
                         writer.WriteLine(details_url.Split('/').Last() + "|" + line);
                         writer.Close();
                     }
@@ -692,13 +636,13 @@ namespace ScraperTest_2
             reader.Close();
             MessageBox.Show("DONE !");
 
-        }
+        }//BUILDS HAZARDS.txt (ID | CLASS | Hxxx) !CAN CONTAIN NULL
 
-        private void button7_Click(object sender, EventArgs e)
+        private void AddBtn_Click(object sender, EventArgs e)
         {
             string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             SqlConnection conn = new SqlConnection(cstr);
-            string sql = "INSERT INTO [HAZARDS](URL, HCATEGORY, HSTATEMENT) VALUES (@URL, @HCATEGORY, @HSTATEMENT)";
+            string sql = "INSERT INTO [HAZARDS](URL, HCATEGORY, HSTATEMENT1, HSTATEMENT2) VALUES (@URL, @HCATEGORY, @HSTATEMENT1, @HSTATEMENT2)";
 
             StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\HAZARDS.txt");
             string line;
@@ -706,29 +650,11 @@ namespace ScraperTest_2
             while ((line = reader.ReadLine()) != null)
             {
                 string[] split = line.Split("|");
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@URL", split[0]);
-                cmd.Parameters.AddWithValue("@HCATEGORY", split[1]);
-                cmd.Parameters.AddWithValue("@HSTATEMENT", split[2]);
-                cmd.ExecuteNonQuery();
-                cmd.Dispose();
-            }
-            conn.Close();
-            MessageBox.Show("DONE !");
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-            string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-            SqlConnection conn = new SqlConnection(cstr);
-            string sql = "INSERT INTO [HAZARDS1](URL, HCATEGORY, HSTATEMENT1, HSTATEMENT2) VALUES (@URL, @HCATEGORY, @HSTATEMENT1, @HSTATEMENT2)";
-
-            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\HAZARDS1.txt");
-            string line;
-            conn.Open();
-            while ((line = reader.ReadLine()) != null)
-            {
-                string[] split = line.Split("|");
+                if (split.Length >= 5)
+                {
+                    for (int i = 4; i < split.Length; i++) split[3] += "|" + split[i];
+                }  
+                
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@URL", split[0]);
@@ -741,9 +667,9 @@ namespace ScraperTest_2
             }
             conn.Close();
             MessageBox.Show("DONE !");
-        }
+        }//ADD HAZARDS.txt to TABLE = [HAZARDS]
 
-        private void button9_Click(object sender, EventArgs e)
+        private void IdentifiedBtn_Click(object sender, EventArgs e)
         {
             string u = "https://echa.europa.eu/el/registry-of-svhc-intentions?p_p_id=disslists_WAR_disslistsportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_disslists_WAR_disslistsportlet_lec_submitter=&_disslists_WAR_disslistsportlet_sbm_expected_submissionTo=&_disslists_WAR_disslistsportlet_dte_opinionTo=&_disslists_WAR_disslistsportlet_orderByCol=sbm_expected_submission&_disslists_WAR_disslistsportlet_substance_identifier_field_key=&_disslists_WAR_disslistsportlet_delta=50&_disslists_WAR_disslistsportlet_dte_adoptionFrom=&_disslists_WAR_disslistsportlet_deltaParamValue=50&_disslists_WAR_disslistsportlet_dte_withdrawnFrom=&_disslists_WAR_disslistsportlet_dte_withdrawnTo=&_disslists_WAR_disslistsportlet_dte_adoptionTo=&_disslists_WAR_disslistsportlet_multiValueSearchOperatorhaz_detailed_concern=AND&_disslists_WAR_disslistsportlet_prc_public_status=Identified+SVHC&_disslists_WAR_disslistsportlet_orderByType=desc&_disslists_WAR_disslistsportlet_dte_opinionFrom=&_disslists_WAR_disslistsportlet_dte_intentionFrom=&_disslists_WAR_disslistsportlet_dte_inclusionFrom=&_disslists_WAR_disslistsportlet_dte_inclusionTo=&_disslists_WAR_disslistsportlet_doSearch=&_disslists_WAR_disslistsportlet_sbm_expected_submissionFrom=&_disslists_WAR_disslistsportlet_dte_intentionTo=&_disslists_WAR_disslistsportlet_resetCur=false&_disslists_WAR_disslistsportlet_cur=";
             
@@ -754,13 +680,13 @@ namespace ScraperTest_2
                 HtmlAgilityPack.HtmlDocument d = web.Load(nu);
 
                 var s = d.DocumentNode.SelectNodes("//a[contains(@class, 'substanceNameLink')]");
-                //MessageBox.Show(s.Count().ToString());
-                StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\HAZARDS2.txt", true);
+
+                StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\IDENTIFIED_URLS.txt", true);
                 foreach (var ss in s)
                 {
                     try
                     {
-                        writer.WriteLine(ss.GetAttributeValue("href"));
+                        writer.WriteLine(ss.GetAttributeValue("href").Trim());
                     }
                     catch (Exception ex)
                     { MessageBox.Show(ex.Message); }
@@ -770,15 +696,15 @@ namespace ScraperTest_2
 
 
             MessageBox.Show("DONE !");
-        }
+        }//FINDS IDENTIFIED LIST AND SAVES LINKS TO IDENTIFIED_URLS.txt
 
-        private void button10_Click(object sender, EventArgs e)
+        private void FindInfoBtn_Click(object sender, EventArgs e)
         {
             string nu;
 
 
-            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\HAZARDS2.txt");
-            StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\SUBS.txt", true);
+            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\IDENTIFIED_URLS.txt");
+            StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\SUBS_INFO.txt", true);
             
 
             while((nu = reader.ReadLine()) != null)
@@ -800,15 +726,15 @@ namespace ScraperTest_2
             reader.Close();
             writer.Close();
             MessageBox.Show("DONE !");
-        }
+        }//READS IDENTIFIED_URLS.txt AND STORES RESULTS TO SUBS_INFO.txt (NAME | EC | CAS)
 
-        private void button11_Click(object sender, EventArgs e)
+        private void AddInfoToDbBtn_Click(object sender, EventArgs e)
         {
             string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             SqlConnection conn = new SqlConnection(cstr);
             string sql = "INSERT INTO [IDENTIFIED](NAME, EC, CAS) VALUES (@NAME, @EC, @CAS)";
 
-            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\SUBS.txt");
+            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\SUBS_INFO.txt");
             string line;
             conn.Open();
             while ((line = reader.ReadLine()) != null)
@@ -827,6 +753,26 @@ namespace ScraperTest_2
             }
             conn.Close();
             MessageBox.Show("DONE !");
+        }//ADD SUBS_INFO.txt to table = [IDENTIFIED]
+
+        private void ReadXlBtn_Click(object sender, EventArgs e)
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            string xlpath = "C:\\Users\\User\\Desktop\\ChemList.xlsx";
+            var stream = File.Open(xlpath, FileMode.Open, FileAccess.Read);
+            var reader = ExcelReaderFactory.CreateReader(stream);
+
+            var result = reader.AsDataSet();
+            Form3 f3 = new Form3(result);
+            f3.ShowDialog();
+            stream.Dispose();
+            reader.Dispose();
+        }
+
+        private void AddXltoDbBtn_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
