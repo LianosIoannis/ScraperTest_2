@@ -58,7 +58,7 @@ namespace ScraperTest_2
                         else v[j] += t + "|";
                     }
                     v[j] = v[j].Remove(v[j].Length-1);
-                    if (v[j] == "") v[j] = "NULL";
+                    if (v[j] == null || v[j] == "") v[j] = "NULL";
                 }
 
                 ds.Tables[0].Rows.Add(v);
@@ -82,10 +82,10 @@ namespace ScraperTest_2
                 dt.Rows.Add(dr);
             }
             SqlConnection conn = new SqlConnection(cstr);
-            SqlCommand cmd = new SqlCommand("DELETE FROM XLINVENTORY", conn);
+            SqlCommand cmd = new SqlCommand("DELETE FROM XLSINVENTORY", conn);
             SqlBulkCopy bk = new SqlBulkCopy(conn);
 
-            bk.DestinationTableName = "dbo.XLINVENTORY";
+            bk.DestinationTableName = "dbo.XLSINVENTORY";
 
             conn.Open();
             try
@@ -101,6 +101,179 @@ namespace ScraperTest_2
             conn.Close();
             bk.Close();
 
+        }
+
+        private void IdStBtn_Click(object sender, EventArgs e)
+        {
+            DataTable dt= new DataTable();
+
+            dt.Columns.Add("CHEMID");
+            dt.Columns.Add("HSTATEMENT");
+
+            foreach (DataGridViewRow dr in ExcelGridView.Rows)
+            {
+                string[] h1, h2, h3;
+                if (dr.Cells[0].Value is not null)
+                {
+                    h1 = (dr.Cells[6].Value.ToString()).Split("|");
+                    h2 = (dr.Cells[8].Value.ToString()).Split("|");
+                    h3 = (dr.Cells[9].Value.ToString()).Split("|");
+                }
+                else
+                {
+                    h1 = new string[] { "NULL" };
+                    h2 = new string[] { "NULL" };
+                    h3 = new string[] { "NULL" };
+                }
+
+                foreach (string h in h1)
+                {
+                    if (h != "NULL")
+                    {
+                        dt.Rows.Add(new string[] { dr.Cells[0].Value.ToString(), h });
+                        //MessageBox.Show(dr.Cells[0].Value.ToString() + "  " + h);
+                    }
+                }
+                foreach (string h in h2)
+                {
+                    if (h != "NULL")
+                    {
+                        dt.Rows.Add(new string[] { dr.Cells[0].Value.ToString(), h });
+                        //MessageBox.Show(dr.Cells[0].Value.ToString() + "  " + h);
+                    }
+                }
+                foreach (string h in h3)
+                {
+                    if (h != "NULL")
+                    {
+                        dt.Rows.Add(new string[] { dr.Cells[0].Value.ToString(), h });
+                        //MessageBox.Show(dr.Cells[0].Value.ToString() + "  " + h);
+                    }
+                }
+            }
+
+            string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            SqlConnection conn = new SqlConnection(cstr);
+            SqlCommand cmd = new SqlCommand("DELETE FROM XLSIDSTM", conn);
+            SqlBulkCopy bk = new SqlBulkCopy(conn);
+
+            bk.DestinationTableName = "dbo.XLSIDSTM";
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+                bk.WriteToServer(dt);
+                MessageBox.Show("DONE !");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+            conn.Close();
+            bk.Close();
+        }
+
+        private void IdImgBtn_Click(object sender, EventArgs e)
+        {
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("CHEMID");
+            dt.Columns.Add("IMAGE");
+
+            foreach (DataGridViewRow dr in ExcelGridView.Rows)
+            {
+                string[] h1;
+                if (dr.Cells[0].Value is not null)
+                {
+                    h1 = (dr.Cells[7].Value.ToString()).Split("|");                 
+                }
+                else
+                {
+                    h1 = new string[] { "NULL" };
+                }
+
+                foreach (string h in h1)
+                {
+                    if (h != "NULL")
+                    {
+                        dt.Rows.Add(new string[] { dr.Cells[0].Value.ToString(), h });
+                        //MessageBox.Show(dr.Cells[0].Value.ToString() + "  " + h);
+                    }
+                }                
+            }
+
+            string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            SqlConnection conn = new SqlConnection(cstr);
+            SqlCommand cmd = new SqlCommand("DELETE FROM XLSIDIMG", conn);
+            SqlBulkCopy bk = new SqlBulkCopy(conn);
+
+            bk.DestinationTableName = "dbo.XLSIDIMG";
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+                bk.WriteToServer(dt);
+                MessageBox.Show("DONE !");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+            conn.Close();
+            bk.Close();
+        }
+
+        private void IdClasBtn_Click(object sender, EventArgs e)
+        {
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("CHEMID");
+            dt.Columns.Add("CLAS");
+
+            foreach (DataGridViewRow dr in ExcelGridView.Rows)
+            {
+                string[] h1;
+                if (dr.Cells[0].Value is not null)
+                {
+                    h1 = (dr.Cells[5].Value.ToString()).Split("|");
+                }
+                else
+                {
+                    h1 = new string[] { "NULL" };
+                }
+
+                foreach (string h in h1)
+                {
+                    if (h != "NULL")
+                    {
+                        dt.Rows.Add(new string[] { dr.Cells[0].Value.ToString(), h });
+                        //MessageBox.Show(dr.Cells[0].Value.ToString() + "  " + h);
+                    }
+                }
+            }
+
+            string cstr = "Data Source=DESKTOP-HFR3D87\\SQLEXPRESS;Initial Catalog=Ecig_Test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            SqlConnection conn = new SqlConnection(cstr);
+            SqlCommand cmd = new SqlCommand("DELETE FROM XLSIDCLS", conn);
+            SqlBulkCopy bk = new SqlBulkCopy(conn);
+
+            bk.DestinationTableName = "dbo.XLSIDCLS";
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+                bk.WriteToServer(dt);
+                MessageBox.Show("DONE !");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+            conn.Close();
+            bk.Close();
         }
     }
 }

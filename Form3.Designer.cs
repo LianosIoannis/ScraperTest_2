@@ -30,6 +30,9 @@
         {
             this.ExcelGridView = new System.Windows.Forms.DataGridView();
             this.AddGridToDbBtn = new System.Windows.Forms.Button();
+            this.IdStBtn = new System.Windows.Forms.Button();
+            this.IdImgBtn = new System.Windows.Forms.Button();
+            this.IdClasBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ExcelGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,11 +58,44 @@
             this.AddGridToDbBtn.UseVisualStyleBackColor = true;
             this.AddGridToDbBtn.Click += new System.EventHandler(this.AddGridToDbBtn_Click);
             // 
+            // IdStBtn
+            // 
+            this.IdStBtn.Location = new System.Drawing.Point(227, 24);
+            this.IdStBtn.Name = "IdStBtn";
+            this.IdStBtn.Size = new System.Drawing.Size(178, 23);
+            this.IdStBtn.TabIndex = 3;
+            this.IdStBtn.Text = "BUILD ID-STATEMENT TABLE";
+            this.IdStBtn.UseVisualStyleBackColor = true;
+            this.IdStBtn.Click += new System.EventHandler(this.IdStBtn_Click);
+            // 
+            // IdImgBtn
+            // 
+            this.IdImgBtn.Location = new System.Drawing.Point(411, 24);
+            this.IdImgBtn.Name = "IdImgBtn";
+            this.IdImgBtn.Size = new System.Drawing.Size(178, 23);
+            this.IdImgBtn.TabIndex = 4;
+            this.IdImgBtn.Text = "BUILD ID-IMAGE TABLE";
+            this.IdImgBtn.UseVisualStyleBackColor = true;
+            this.IdImgBtn.Click += new System.EventHandler(this.IdImgBtn_Click);
+            // 
+            // IdClasBtn
+            // 
+            this.IdClasBtn.Location = new System.Drawing.Point(595, 24);
+            this.IdClasBtn.Name = "IdClasBtn";
+            this.IdClasBtn.Size = new System.Drawing.Size(178, 23);
+            this.IdClasBtn.TabIndex = 5;
+            this.IdClasBtn.Text = "BUILD ID-CLASS TABLE";
+            this.IdClasBtn.UseVisualStyleBackColor = true;
+            this.IdClasBtn.Click += new System.EventHandler(this.IdClasBtn_Click);
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1084, 641);
+            this.Controls.Add(this.IdClasBtn);
+            this.Controls.Add(this.IdImgBtn);
+            this.Controls.Add(this.IdStBtn);
             this.Controls.Add(this.AddGridToDbBtn);
             this.Controls.Add(this.ExcelGridView);
             this.Name = "Form3";
@@ -73,5 +109,8 @@
 
         private DataGridView ExcelGridView;
         private Button AddGridToDbBtn;
+        private Button IdStBtn;
+        private Button IdImgBtn;
+        private Button IdClasBtn;
     }
 }
