@@ -34,7 +34,7 @@ namespace ScraperTest_2
 
         string url = "https://echa.europa.eu/el/information-on-chemicals/cl-inventory-database?p_p_id=dissclinventory_WAR_dissclinventoryportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_dissclinventory_WAR_dissclinventoryportlet_jspPage=%2Fhtml%2Fsearch%2Fsearch.jsp&_dissclinventory_WAR_dissclinventoryportlet_searching=true&_dissclinventory_WAR_dissclinventoryportlet_iterating=true&_dissclinventory_WAR_dissclinventoryportlet_criteriaParam=_dissclinventory_WAR_dissclinventoryportlet_criteriaKeytcZP&_dissclinventory_WAR_dissclinventoryportlet_delta=50&_dissclinventory_WAR_dissclinventoryportlet_orderByCol=&_dissclinventory_WAR_dissclinventoryportlet_orderByType=asc&_dissclinventory_WAR_dissclinventoryportlet_resetCur=false&_dissclinventory_WAR_dissclinventoryportlet_cur=";
         int max = 1;
-        string folder = "C:\\Users\\User\\Desktop";
+        string folder = "C:\\Users\\User\\Desktop\\IMAGES\\s";
         public Form1()
         {
             InitializeComponent();
@@ -645,13 +645,20 @@ namespace ScraperTest_2
 
         private void TestBtn_Click(object sender, EventArgs e)
         {
-            StreamReader reader = new StreamReader("C:\\Users\\User\\Desktop\\DETAILS.txt");
-            StreamReader name = new StreamReader("C:\\Users\\User\\Desktop\\NAMES.txt");
+            StreamReader reader = new StreamReader(folder + "\\DETAILS.txt");
+            StreamReader ec = new StreamReader(folder + "\\EC.txt");
+            StreamReader cas = new StreamReader(folder + "\\CAS.txt");
+
             string details_url;
 
             while ((details_url = reader.ReadLine()) != null)            
             {
-                string n = name.ReadLine().Trim();
+                string n1 = ec.ReadLine().Trim() ?? "NULL";
+                string n2 = cas.ReadLine().Trim() ?? "NULL";
+                if (n1 == "") n1 = "NULL";
+                if (n2 == "") n2 = "NULL";
+
+
 
                 HtmlWeb web = new HtmlWeb();
                 HtmlAgilityPack.HtmlDocument d = web.Load(details_url);
@@ -704,8 +711,8 @@ namespace ScraperTest_2
 
                     if (line != "")
                     {
-                        StreamWriter writer = new StreamWriter("C:\\Users\\User\\Desktop\\HAZARDS.txt", true);
-                        writer.WriteLine(details_url.Split('/').Last() + "|" + n + "|" + line);
+                        StreamWriter writer = new StreamWriter(folder + "\\HAZARDS.txt", true);
+                        writer.WriteLine(details_url.Split('/').Last() + "|" + n1 + "|" + n2 + "|" + line);
                         writer.Close();
                     }
                 }
@@ -714,7 +721,7 @@ namespace ScraperTest_2
             reader.Close();
             MessageBox.Show("DONE !");
 
-        }//BUILDS HAZARDS.txt (ID | CLASS | Hxxx) !CAN CONTAIN NULL
+        }//BUILDS HAZARDS.txt (URL_ID | EC | CAS | Hxxx) !CAN CONTAIN NULL
 
         private void AddBtn_Click(object sender, EventArgs e)
         {
@@ -850,6 +857,21 @@ namespace ScraperTest_2
             reader.Dispose();
         }//READS EXCEL FILE AND OPENS FORM3 TO SHOW DATA
 
-        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string url = "https://echa.europa.eu/el/information-on-chemicals/cl-inventory-database?p_p_id=dissclinventory_WAR_dissclinventoryportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_dissclinventory_WAR_dissclinventoryportlet_jspPage=%2Fhtml%2Fsearch%2Fsearch.jsp&_dissclinventory_WAR_dissclinventoryportlet_searching=true&_dissclinventory_WAR_dissclinventoryportlet_iterating=true&_dissclinventory_WAR_dissclinventoryportlet_criteriaParam=_dissclinventory_WAR_dissclinventoryportlet_criteriaKeyYiIU&_dissclinventory_WAR_dissclinventoryportlet_delta=50&_dissclinventory_WAR_dissclinventoryportlet_orderByCol=&_dissclinventory_WAR_dissclinventoryportlet_orderByType=asc&_dissclinventory_WAR_dissclinventoryportlet_resetCur=false&_dissclinventory_WAR_dissclinventoryportlet_cur=28";
+
+            HtmlWeb web = new HtmlWeb();
+            HtmlAgilityPack.HtmlDocument d = web.Load(url);
+
+            var k = from a in d.DocumentNode.SelectNodes("//a[@class='substanceNameLink']")
+                    where a.GetAttributeValue("href") != ""
+                    select a;
+            foreach (var l in k)
+            {
+                MessageBox.Show(l.InnerText.Trim());
+            }
+
+        }
     }
 }

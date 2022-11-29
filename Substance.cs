@@ -18,7 +18,7 @@ namespace ScraperTest_2
 
         private string source { get; set; }    
 
-        private string link { get; set; } 
+        private string details { get; set; } 
         public Substance()
         {
 
