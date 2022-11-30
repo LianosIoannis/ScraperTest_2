@@ -30,6 +30,9 @@ namespace ScraperTest_2
         BackgroundWorker bgwIMAGES = new BackgroundWorker();
         BackgroundWorker bgwSOURCE = new BackgroundWorker();
         BackgroundWorker bgwDETAILS = new BackgroundWorker();
+        BackgroundWorker main_worker = new BackgroundWorker();  
+
+        List<Substance> substances= new List<Substance>();  
 
 
         string url = "https://echa.europa.eu/el/information-on-chemicals/cl-inventory-database?p_p_id=dissclinventory_WAR_dissclinventoryportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_dissclinventory_WAR_dissclinventoryportlet_jspPage=%2Fhtml%2Fsearch%2Fsearch.jsp&_dissclinventory_WAR_dissclinventoryportlet_searching=true&_dissclinventory_WAR_dissclinventoryportlet_iterating=true&_dissclinventory_WAR_dissclinventoryportlet_criteriaParam=_dissclinventory_WAR_dissclinventoryportlet_criteriaKeytcZP&_dissclinventory_WAR_dissclinventoryportlet_delta=50&_dissclinventory_WAR_dissclinventoryportlet_orderByCol=&_dissclinventory_WAR_dissclinventoryportlet_orderByType=asc&_dissclinventory_WAR_dissclinventoryportlet_resetCur=false&_dissclinventory_WAR_dissclinventoryportlet_cur=";
@@ -46,82 +49,291 @@ namespace ScraperTest_2
 
         private void RetrieveButton_Click(object sender, EventArgs e)
         {
-            NamesProgress.Maximum = max * 50;
-            EcProgress.Maximum = max * 50;
-            CasProgress.Maximum = max * 50;
-            ClassProgress.Maximum = max * 50;
-            ImagesProgress.Maximum = max * 50;
-            SourceProgress.Maximum = max * 50;
-            DetailsProgress.Maximum = max * 50;
+            Main_progress.Maximum = max * 50;
+            Main_progress.Value = 0;
 
-            NamesProgress.Value = 0;
-            EcProgress.Value = 0;
-            CasProgress.Value = 0;
-            ClassProgress.Value = 0;
-            ImagesProgress.Value = 0;
-            SourceProgress.Value = 0;
-            DetailsProgress.Value = 0;
-
-            NamesText.Text = "...";
-            EcText.Text = "...";
-            CasText.Text = "...";
-            ClassText.Text = "...";
-            ImagesText.Text = "...";
-            SourceText.Text = "...";
-            DetailsText.Text = "...";
+            main_worker.DoWork += new DoWorkEventHandler(findLoop);
+            main_worker.ProgressChanged += new ProgressChangedEventHandler(findLoopProgressChanged);
+            main_worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(findLoopProgressCompleted);
+            main_worker.WorkerReportsProgress = true;
+            main_worker.RunWorkerAsync();
 
 
-            bgwNAMES.DoWork += new DoWorkEventHandler(find_Names);
-            bgwNAMES.ProgressChanged += new ProgressChangedEventHandler(NamesProgressChanged);
-            bgwNAMES.RunWorkerCompleted += new RunWorkerCompletedEventHandler(NamesCompleted);
-            bgwNAMES.WorkerReportsProgress = true;
-            bgwNAMES.RunWorkerAsync();
 
-            bgwEC.DoWork += new DoWorkEventHandler(find_EC);
-            bgwEC.ProgressChanged += new ProgressChangedEventHandler(ECProgressChanged);
-            bgwEC.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ECCompleted);
-            bgwEC.WorkerReportsProgress = true;
-            bgwEC.RunWorkerAsync();
+            /*//NamesProgress.Maximum = max * 50;
+            //EcProgress.Maximum = max * 50;
+            //CasProgress.Maximum = max * 50;
+            //ClassProgress.Maximum = max * 50;
+            //ImagesProgress.Maximum = max * 50;
+            //SourceProgress.Maximum = max * 50;
+            //DetailsProgress.Maximum = max * 50;
 
-            bgwCAS.DoWork += new DoWorkEventHandler(find_CAS);
-            bgwCAS.ProgressChanged += new ProgressChangedEventHandler(CASProgressChanged);
-            bgwCAS.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CASCompleted);
-            bgwCAS.WorkerReportsProgress = true;
-            bgwCAS.RunWorkerAsync();
+            //NamesProgress.Value = 0;
+            //EcProgress.Value = 0;
+            //CasProgress.Value = 0;
+            //ClassProgress.Value = 0;
+            //ImagesProgress.Value = 0;
+            //SourceProgress.Value = 0;
+            //DetailsProgress.Value = 0;
 
-            bgwCLASS.DoWork += new DoWorkEventHandler(find_CLASS);
-            bgwCLASS.ProgressChanged += new ProgressChangedEventHandler(CLASSProgressChanged);
-            bgwCLASS.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CLASSCompleted);
-            bgwCLASS.WorkerReportsProgress = true;
-            bgwCLASS.RunWorkerAsync();
+            //NamesText.Text = "...";
+            //EcText.Text = "...";
+            //CasText.Text = "...";
+            //ClassText.Text = "...";
+            //ImagesText.Text = "...";
+            //SourceText.Text = "...";
+            //DetailsText.Text = "...";
 
-            bgwSOURCE.DoWork += new DoWorkEventHandler(find_SOURCE);
-            bgwSOURCE.ProgressChanged += new ProgressChangedEventHandler(SOURCEProgressChanged);
-            bgwSOURCE.RunWorkerCompleted += new RunWorkerCompletedEventHandler(SOURCECompleted);
-            bgwSOURCE.WorkerReportsProgress = true;
-            bgwSOURCE.RunWorkerAsync();
 
-            bgwIMAGES.DoWork += new DoWorkEventHandler(find_IMAGES);
-            bgwIMAGES.ProgressChanged += new ProgressChangedEventHandler(IMAGESProgressChanged);
-            bgwIMAGES.RunWorkerCompleted += new RunWorkerCompletedEventHandler(IMAGESCompleted);
-            bgwIMAGES.WorkerReportsProgress = true;
-            bgwIMAGES.RunWorkerAsync();
+            //bgwNAMES.DoWork += new DoWorkEventHandler(find_Names);
+            //bgwNAMES.ProgressChanged += new ProgressChangedEventHandler(NamesProgressChanged);
+            //bgwNAMES.RunWorkerCompleted += new RunWorkerCompletedEventHandler(NamesCompleted);
+            //bgwNAMES.WorkerReportsProgress = true;
+            //bgwNAMES.RunWorkerAsync();
 
-            bgwDETAILS.DoWork += new DoWorkEventHandler(find_DETAILS);
-            bgwDETAILS.ProgressChanged += new ProgressChangedEventHandler(DETAILSProgressChanged);
-            bgwDETAILS.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DETAILSCompleted);
-            bgwDETAILS.WorkerReportsProgress = true;
-            bgwDETAILS.RunWorkerAsync();
+            //bgwEC.DoWork += new DoWorkEventHandler(find_EC);
+            //bgwEC.ProgressChanged += new ProgressChangedEventHandler(ECProgressChanged);
+            //bgwEC.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ECCompleted);
+            //bgwEC.WorkerReportsProgress = true;
+            //bgwEC.RunWorkerAsync();
 
-            bgwNAMES.Dispose();
-            bgwEC.Dispose();
-            bgwCAS.Dispose();
-            bgwCLASS.Dispose();
-            bgwSOURCE.Dispose();
-            bgwIMAGES.Dispose();
-            bgwDETAILS.Dispose();
+            //bgwCAS.DoWork += new DoWorkEventHandler(find_CAS);
+            //bgwCAS.ProgressChanged += new ProgressChangedEventHandler(CASProgressChanged);
+            //bgwCAS.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CASCompleted);
+            //bgwCAS.WorkerReportsProgress = true;
+            //bgwCAS.RunWorkerAsync();
+
+            //bgwCLASS.DoWork += new DoWorkEventHandler(find_CLASS);
+            //bgwCLASS.ProgressChanged += new ProgressChangedEventHandler(CLASSProgressChanged);
+            //bgwCLASS.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CLASSCompleted);
+            //bgwCLASS.WorkerReportsProgress = true;
+            //bgwCLASS.RunWorkerAsync();
+
+            //bgwSOURCE.DoWork += new DoWorkEventHandler(find_SOURCE);
+            //bgwSOURCE.ProgressChanged += new ProgressChangedEventHandler(SOURCEProgressChanged);
+            //bgwSOURCE.RunWorkerCompleted += new RunWorkerCompletedEventHandler(SOURCECompleted);
+            //bgwSOURCE.WorkerReportsProgress = true;
+            //bgwSOURCE.RunWorkerAsync();
+
+            //bgwIMAGES.DoWork += new DoWorkEventHandler(find_IMAGES);
+            //bgwIMAGES.ProgressChanged += new ProgressChangedEventHandler(IMAGESProgressChanged);
+            //bgwIMAGES.RunWorkerCompleted += new RunWorkerCompletedEventHandler(IMAGESCompleted);
+            //bgwIMAGES.WorkerReportsProgress = true;
+            //bgwIMAGES.RunWorkerAsync();
+
+            //bgwDETAILS.DoWork += new DoWorkEventHandler(find_DETAILS);
+            //bgwDETAILS.ProgressChanged += new ProgressChangedEventHandler(DETAILSProgressChanged);
+            //bgwDETAILS.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DETAILSCompleted);
+            //bgwDETAILS.WorkerReportsProgress = true;
+            //bgwDETAILS.RunWorkerAsync();
+
+            //bgwNAMES.Dispose();
+            //bgwEC.Dispose();
+            //bgwCAS.Dispose();
+            //bgwCLASS.Dispose();
+            //bgwSOURCE.Dispose();
+            //bgwIMAGES.Dispose();
+            //bgwDETAILS.Dispose();*/
 
         }
+
+        private void findLoop(object sender, EventArgs e)
+        {
+            string new_url;
+            bool loaded = true;
+
+            substances.Capacity = max * 50;
+
+            for (int i = 0; i < max; i++)
+            {
+                if (loaded == false)
+                {
+                    i--;
+                    loaded = true;
+                }
+                new_url = url + (i + 1).ToString();
+
+                HtmlWeb web = new HtmlWeb();
+                HtmlAgilityPack.HtmlDocument d;
+                try
+                {
+                    d = web.Load(new_url);
+                }
+                catch (Exception ex)
+                {
+                    loaded = false;
+                    continue;
+                }
+
+                for (int j = 0; j < 50; j++) substances.Add(new Substance());
+
+                Find_Names(d,i);
+                Find_EC(d, i);
+                Find_CAS(d, i);
+                Find_CLASS(d, i);
+                Find_IMAGES(d, i);
+                Find_SOURCE(d, i);
+                Find_Details(d, i);
+
+                main_worker.ReportProgress(0);
+            }
+        }
+
+        private void findLoopProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            Main_progress.Value += 50;
+        }
+
+        private void findLoopProgressCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MessageBox.Show("DONE !");
+        }
+
+        private void Find_Names(HtmlAgilityPack.HtmlDocument d, int starting_count)
+        {
+            try
+            {                
+                var k = from a in d.DocumentNode.SelectNodes("//a[@class='substanceNameLink']")
+                        where a.GetAttributeValue("href") != ""
+                        select a;
+                int count = starting_count*50;
+                foreach (var cell in k)
+                {
+                    string line = String.Concat(cell.InnerText.Trim().Where(k => !Char.IsWhiteSpace(k)));                   
+                    if (line == "") line = "NULL";
+                    substances.ElementAt(count).name = line;
+                    count++;
+                }
+            }
+            catch (Exception ex){ }                      
+        }
+
+        private void Find_EC(HtmlAgilityPack.HtmlDocument d, int starting_count)
+        {
+            try
+            {
+                int count = starting_count * 50;
+                foreach (var cell in d.DocumentNode.SelectNodes("//tr[@class='   ']"))
+                {
+                    var a = cell.ChildNodes;
+                    var b = a[3];
+                    string line = String.Concat(b.InnerText.Trim().Where(k => !Char.IsWhiteSpace(k)));
+                    if (line == "") line = "NULL";
+                    substances.ElementAt(count).ec = line;
+                    count++;
+                }
+            }
+            catch (Exception ex){ }          
+        }
+
+        private void Find_CAS(HtmlAgilityPack.HtmlDocument d, int starting_count)
+        {
+            try
+            {
+                int count = starting_count * 50;
+                foreach (var cell in d.DocumentNode.SelectNodes("//tr[@class='   ']"))
+                {
+                    var a = cell.ChildNodes;
+                    var b = a[5];
+                    string line = String.Concat(b.InnerText.Trim().Where(k => !Char.IsWhiteSpace(k)));
+                    if (line == "") line = "NULL";
+                    substances.ElementAt(count).cas = line;
+                    count++;
+                }
+            }
+            catch (Exception ex){ }           
+        }
+
+        private void Find_CLASS(HtmlAgilityPack.HtmlDocument d, int starting_count)
+        {
+            try
+            {
+                int count = starting_count * 50;
+                foreach (var cell in d.DocumentNode.SelectNodes("//tr[@class='   ']"))
+                {
+                    var a = cell.Descendants("span");
+
+                    string line = "";
+                    int i = 1;
+                    foreach (var c in a)
+                    {
+                        string temp = String.Concat(c.InnerText.Trim().Where(k => !Char.IsWhiteSpace(k)));
+                        if (temp != "") line += temp;
+                        if (i != a.Count() && temp != "") line += "|";
+                        i++;
+                    }
+                    if (line == "") line = "NULL";
+                    substances.ElementAt(count).clas = line;
+                    count++;
+                }
+            }
+            catch (Exception ex){  }
+            
+        }
+
+        private void Find_IMAGES(HtmlAgilityPack.HtmlDocument d, int starting_count)
+        {
+            try
+            {
+                int count = starting_count * 50;
+                foreach (var cell in d.DocumentNode.SelectNodes("//tr[@class='   ']"))
+                {
+                    var k = from c in cell.Descendants("img")
+                            where c.GetAttributeValue("title", "") != ""
+                            select c;
+
+                    string line = "";
+                    int i = 1;
+                    foreach (var c in k)
+                    {
+                        string v = c.GetAttributeValue("title", "").Trim().ToLower();
+                        if (v != "")
+                        {
+                            line += v;
+                            if (i != k.Count()) line += "|";
+                            i++;
+                        }
+                    }
+                    if (line == "") line = "NULL";
+                    substances.ElementAt(count).image = line;
+                    count++;
+                }
+            }
+            catch (Exception ex){ }            
+        }
+
+        private void Find_SOURCE(HtmlAgilityPack.HtmlDocument d, int starting_count)
+        {
+            var s = d.DocumentNode.SelectNodes("//td[@class='table-cell  text-top']");
+            int c = s.ToList().Count();
+
+            int count = starting_count * 50;
+            for (int i = 3; i < c; i += 4)
+            {
+                string line = String.Concat(s.ElementAt(i).InnerText.Trim().Where(k => !Char.IsWhiteSpace(k)));
+                if (line == "") line = "NULL";
+                substances.ElementAt(count).source = line;
+                count++;
+            }
+        }
+
+        private void Find_Details(HtmlAgilityPack.HtmlDocument d, int starting_count)
+        {
+            var s = from k in d.DocumentNode.SelectNodes("//a[@class='details']")
+                    where k.GetAttributeValue("title") == "View notifications"
+                    select k;
+
+            int c = s.ToList().Count();
+            int count = starting_count * 50;
+            for (int i = 0; i < c; i++)
+            {
+                string line = String.Concat(s.ElementAt(i).GetAttributeValue("href").Trim().Where(k => !Char.IsWhiteSpace(k)));
+                if (line == "") line = "NULL";
+                substances.ElementAt(count).details = line;
+                count++;
+            }
+        }
+
 
         private void find_Names(object sender, EventArgs e)
         {
@@ -158,7 +370,8 @@ namespace ScraperTest_2
 
                     foreach (var cell in k)
                     {
-                        writer.WriteLine(cell.InnerText.Trim());
+                        string line = String.Concat(cell.InnerText.Trim().Where(k => !Char.IsWhiteSpace(k)));
+                        writer.WriteLine(line);
                         bgwNAMES.ReportProgress(0);
                     }
 
@@ -216,9 +429,10 @@ namespace ScraperTest_2
                         var a = cell.ChildNodes;
                         var b = a[3];
 
-                        string line = b.InnerText.Trim();
+                        string line = String.Concat(b.InnerText.Trim().Where(k => !Char.IsWhiteSpace(k)));
                         StreamWriter writer = new StreamWriter(folder + "//EC.txt", true);
-                        writer.Write(line + Environment.NewLine);
+                        if (line == "") line = "NULL";
+                        writer.WriteLine(line);
                         writer.Close();
                         bgwEC.ReportProgress(0);
                     }
@@ -274,9 +488,10 @@ namespace ScraperTest_2
                         var a = cell.ChildNodes;
                         var b = a[5];
 
-                        string line = b.InnerText.Trim();
+                        string line = String.Concat(b.InnerText.Trim().Where(k => !Char.IsWhiteSpace(k)));
                         StreamWriter writer = new StreamWriter(folder + "\\CAS.txt", true);
-                        writer.Write(line + Environment.NewLine);
+                        if (line == "") line = "NULL";
+                        writer.WriteLine(line);
                         writer.Close();
                         bgwCAS.ReportProgress(0);   
                     }
@@ -471,7 +686,9 @@ namespace ScraperTest_2
 
                 for (int i = 3; i < count; i += 4)
                 {
-                    writer.WriteLine(s.ElementAt(i).InnerText.Trim());
+                    string line = String.Concat(s.ElementAt(i).InnerText.Trim().Where(k => !Char.IsWhiteSpace(k)));
+                    if (line == "") line = "NULL";
+                    writer.WriteLine(); 
                     bgwSOURCE.ReportProgress(0);
                 }
                 writer.Close();
@@ -525,7 +742,9 @@ namespace ScraperTest_2
 
                 for (int i = 0; i < count; i++) 
                 {
-                    writer.WriteLine(s.ElementAt(i).GetAttributeValue("href").Trim());
+                    string line = String.Concat(s.ElementAt(i).GetAttributeValue("href").Trim().Where(k => !Char.IsWhiteSpace(k)));
+                    if (line == "") line = "NULL";
+                    writer.WriteLine(line);
                     bgwDETAILS.ReportProgress(0);   
                 }
                 writer.Close();
@@ -546,19 +765,19 @@ namespace ScraperTest_2
 
         private void ClearButton_Click(object sender, EventArgs e)
         {
-            File.WriteAllText("C:\\Users\\User\\Desktop\\NAMES.txt", String.Empty);
-            File.WriteAllText("C:\\Users\\User\\Desktop\\EC.txt", String.Empty);
-            File.WriteAllText("C:\\Users\\User\\Desktop\\CAS.txt", String.Empty);
-            File.WriteAllText("C:\\Users\\User\\Desktop\\CLASS.txt", String.Empty);
-            File.WriteAllText("C:\\Users\\User\\Desktop\\IMAGES.txt", String.Empty);
-            File.WriteAllText("C:\\Users\\User\\Desktop\\SOURCE.txt", String.Empty);
-            File.WriteAllText("C:\\Users\\User\\Desktop\\DETAILS.txt", String.Empty);
+            File.WriteAllText(folder + "\\NAMES.txt", String.Empty);
+            File.WriteAllText(folder + "\\EC.txt", String.Empty);
+            File.WriteAllText(folder + "\\CAS.txt", String.Empty);
+            File.WriteAllText(folder + "\\CLASS.txt", String.Empty);
+            File.WriteAllText(folder + "\\IMAGES.txt", String.Empty);
+            File.WriteAllText(folder + "\\SOURCE.txt", String.Empty);
+            File.WriteAllText(folder + "\\DETAILS.txt", String.Empty);
             MessageBox.Show("CLEAR DONE !");
         }//CLEARS (NAMES, EC, CAS, CLASS, ETAILS, SOURCE, IMAGES).txt FILES
 
         private void ViewDataBtn_Click(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2();
+            Form2 f2 = new Form2(substances);
             f2.ShowDialog();
         }//OPENS FORM2 TO SHOW DATA TO DATAGRIDVIEW
 
@@ -636,7 +855,7 @@ namespace ScraperTest_2
             string m = Interaction.InputBox("Input Urls Count", "Input", "1");
             if (int.TryParse(m, out int v))
             {
-                if (v > 0 && v <= 4282) max = v;
+                if (v > 0 && v <= 4284) max = v;
                 else MessageBox.Show("WRONG NUMBER !");
             }
             else MessageBox.Show("WRONG FORMAT !");
@@ -856,22 +1075,6 @@ namespace ScraperTest_2
             stream.Dispose();
             reader.Dispose();
         }//READS EXCEL FILE AND OPENS FORM3 TO SHOW DATA
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            string url = "https://echa.europa.eu/el/information-on-chemicals/cl-inventory-database?p_p_id=dissclinventory_WAR_dissclinventoryportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_dissclinventory_WAR_dissclinventoryportlet_jspPage=%2Fhtml%2Fsearch%2Fsearch.jsp&_dissclinventory_WAR_dissclinventoryportlet_searching=true&_dissclinventory_WAR_dissclinventoryportlet_iterating=true&_dissclinventory_WAR_dissclinventoryportlet_criteriaParam=_dissclinventory_WAR_dissclinventoryportlet_criteriaKeyYiIU&_dissclinventory_WAR_dissclinventoryportlet_delta=50&_dissclinventory_WAR_dissclinventoryportlet_orderByCol=&_dissclinventory_WAR_dissclinventoryportlet_orderByType=asc&_dissclinventory_WAR_dissclinventoryportlet_resetCur=false&_dissclinventory_WAR_dissclinventoryportlet_cur=28";
-
-            HtmlWeb web = new HtmlWeb();
-            HtmlAgilityPack.HtmlDocument d = web.Load(url);
-
-            var k = from a in d.DocumentNode.SelectNodes("//a[@class='substanceNameLink']")
-                    where a.GetAttributeValue("href") != ""
-                    select a;
-            foreach (var l in k)
-            {
-                MessageBox.Show(l.InnerText.Trim());
-            }
-
-        }
+       
     }
 }

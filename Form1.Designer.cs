@@ -56,7 +56,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.ReadXlBtn = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.Main_progress = new System.Windows.Forms.ProgressBar();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -276,6 +276,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.Main_progress);
             this.groupBox1.Controls.Add(this.AddBtn);
             this.groupBox1.Controls.Add(this.TestBtn);
             this.groupBox1.Controls.Add(this.SetCountBtn);
@@ -322,22 +323,18 @@
             this.ReadXlBtn.UseVisualStyleBackColor = true;
             this.ReadXlBtn.Click += new System.EventHandler(this.ReadXlBtn_Click);
             // 
-            // button1
+            // Main_progress
             // 
-            this.button1.Location = new System.Drawing.Point(227, 363);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 32;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.Main_progress.Location = new System.Drawing.Point(120, 37);
+            this.Main_progress.Name = "Main_progress";
+            this.Main_progress.Size = new System.Drawing.Size(287, 23);
+            this.Main_progress.TabIndex = 26;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 524);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -394,6 +391,6 @@
         private GroupBox groupBox2;
         private GroupBox groupBox3;
         private Button ReadXlBtn;
-        private Button button1;
+        private ProgressBar Main_progress;
     }
 }

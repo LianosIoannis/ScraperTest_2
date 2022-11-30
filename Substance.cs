@@ -6,22 +6,28 @@ using System.Threading.Tasks;
 
 namespace ScraperTest_2
 {
-    internal class Substance
+    public class Substance
     {
-        private string name { get; set; }
-        private string ec { get; set; }
-        private string cas { get; set; } 
-        
-        private string clas { get; set; }   
+        public string name { get; set; }
+        public string ec { get; set; }
+        public string cas { get; set; }
 
-        private string image { get; set; }  
+        public string clas { get; set; }
 
-        private string source { get; set; }    
+        public string image { get; set; }
 
-        private string details { get; set; } 
+        public string source { get; set; }
+
+        public string details { get; set; } 
         public Substance()
         {
-
+            name = "NULL";
+            ec = "NULL";
+            cas = "NULL";   
+            clas = "NULL"; 
+            image = "NULL"; 
+            source = "NULL";    
+            details = "NULL";   
         }
     }
 }

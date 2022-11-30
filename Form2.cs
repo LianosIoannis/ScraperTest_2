@@ -15,13 +15,16 @@ namespace ScraperTest_2
     {
         //BackgroundWorker bgw = new BackgroundWorker();
         string folder = "C:\\Users\\User\\Desktop\\IMAGES\\s";
-        public Form2()
+
+
+        public Form2(List<Substance> ls)
         {
             InitializeComponent();
             //bgw.DoWork += new DoWorkEventHandler(View_Data);
             //bgw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(data_loaded);
             //bgw.RunWorkerAsync();
-            View_Data();
+            //View_Data();
+            View_Data1(ls);
         }
 
         private void View_Data()
@@ -107,6 +110,33 @@ namespace ScraperTest_2
                 CLGridView.Rows[i].Cells[7].Value = cell;
             }
 
+        }
+
+        private void View_Data1(List<Substance> ls)
+        {
+            CLGridView.ColumnCount = 8;
+            CLGridView.Columns[0].Name = "ECHAID";
+            CLGridView.Columns[1].Name = "NAME";
+            CLGridView.Columns[2].Name = "EC";
+            CLGridView.Columns[3].Name = "CAS";
+            CLGridView.Columns[4].Name = "CLASS";
+            CLGridView.Columns[5].Name = "IMAGES";
+            CLGridView.Columns[6].Name = "SOURCE";
+            CLGridView.Columns[7].Name = "DETAILS";
+
+            CLGridView.RowCount = ls.Count; 
+
+            for (int i = 0; i < CLGridView.RowCount; i++)
+            {
+                CLGridView.Rows[i].Cells[0].Value = (i + 1).ToString();
+                CLGridView.Rows[i].Cells[1].Value = ls.ElementAt(i).name;
+                CLGridView.Rows[i].Cells[2].Value = ls.ElementAt(i).ec;
+                CLGridView.Rows[i].Cells[3].Value = ls.ElementAt(i).cas;
+                CLGridView.Rows[i].Cells[4].Value = ls.ElementAt(i).clas;
+                CLGridView.Rows[i].Cells[5].Value = ls.ElementAt(i).image;
+                CLGridView.Rows[i].Cells[6].Value = ls.ElementAt(i).source;
+                CLGridView.Rows[i].Cells[7].Value = ls.ElementAt(i).details;
+            }
         }
 
         private void data_loaded(object sender, RunWorkerCompletedEventArgs e)
