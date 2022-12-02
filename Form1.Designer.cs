@@ -53,10 +53,10 @@
             this.FindInfoBtn = new System.Windows.Forms.Button();
             this.AddInfoToDbBtn = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Main_progress = new System.Windows.Forms.ProgressBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.ReadXlBtn = new System.Windows.Forms.Button();
-            this.Main_progress = new System.Windows.Forms.ProgressBar();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -248,7 +248,7 @@
             // 
             this.IdentifiedBtn.Location = new System.Drawing.Point(6, 95);
             this.IdentifiedBtn.Name = "IdentifiedBtn";
-            this.IdentifiedBtn.Size = new System.Drawing.Size(143, 23);
+            this.IdentifiedBtn.Size = new System.Drawing.Size(177, 23);
             this.IdentifiedBtn.TabIndex = 26;
             this.IdentifiedBtn.Text = "FIND SUB URLS";
             this.IdentifiedBtn.UseVisualStyleBackColor = true;
@@ -258,7 +258,7 @@
             // 
             this.FindInfoBtn.Location = new System.Drawing.Point(6, 66);
             this.FindInfoBtn.Name = "FindInfoBtn";
-            this.FindInfoBtn.Size = new System.Drawing.Size(143, 23);
+            this.FindInfoBtn.Size = new System.Drawing.Size(177, 23);
             this.FindInfoBtn.TabIndex = 27;
             this.FindInfoBtn.Text = "RETRIEVE SUB INFO";
             this.FindInfoBtn.UseVisualStyleBackColor = true;
@@ -268,7 +268,7 @@
             // 
             this.AddInfoToDbBtn.Location = new System.Drawing.Point(6, 37);
             this.AddInfoToDbBtn.Name = "AddInfoToDbBtn";
-            this.AddInfoToDbBtn.Size = new System.Drawing.Size(143, 23);
+            this.AddInfoToDbBtn.Size = new System.Drawing.Size(177, 23);
             this.AddInfoToDbBtn.TabIndex = 28;
             this.AddInfoToDbBtn.Text = "ADD INFO TO DB";
             this.AddInfoToDbBtn.UseVisualStyleBackColor = true;
@@ -290,6 +290,13 @@
             this.groupBox1.TabIndex = 29;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "CL INVENTORY ( ALL )";
+            // 
+            // Main_progress
+            // 
+            this.Main_progress.Location = new System.Drawing.Point(120, 37);
+            this.Main_progress.Name = "Main_progress";
+            this.Main_progress.Size = new System.Drawing.Size(287, 23);
+            this.Main_progress.TabIndex = 26;
             // 
             // groupBox2
             // 
@@ -317,18 +324,11 @@
             // 
             this.ReadXlBtn.Location = new System.Drawing.Point(6, 95);
             this.ReadXlBtn.Name = "ReadXlBtn";
-            this.ReadXlBtn.Size = new System.Drawing.Size(148, 23);
+            this.ReadXlBtn.Size = new System.Drawing.Size(145, 23);
             this.ReadXlBtn.TabIndex = 0;
             this.ReadXlBtn.Text = "READ EXCEL DATA";
             this.ReadXlBtn.UseVisualStyleBackColor = true;
             this.ReadXlBtn.Click += new System.EventHandler(this.ReadXlBtn_Click);
-            // 
-            // Main_progress
-            // 
-            this.Main_progress.Location = new System.Drawing.Point(120, 37);
-            this.Main_progress.Name = "Main_progress";
-            this.Main_progress.Size = new System.Drawing.Size(287, 23);
-            this.Main_progress.TabIndex = 26;
             // 
             // Form1
             // 
