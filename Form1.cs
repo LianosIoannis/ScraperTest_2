@@ -23,13 +23,13 @@ namespace ScraperTest_2
 
     public partial class Form1 : Form
     {
-        BackgroundWorker bgwNAMES = new BackgroundWorker();
+        /*BackgroundWorker bgwNAMES = new BackgroundWorker();
         BackgroundWorker bgwEC = new BackgroundWorker();
         BackgroundWorker bgwCAS = new BackgroundWorker();
         BackgroundWorker bgwCLASS = new BackgroundWorker();
         BackgroundWorker bgwIMAGES = new BackgroundWorker();
         BackgroundWorker bgwSOURCE = new BackgroundWorker();
-        BackgroundWorker bgwDETAILS = new BackgroundWorker();
+        BackgroundWorker bgwDETAILS = new BackgroundWorker();*/
         BackgroundWorker main_worker = new BackgroundWorker();  
 
         List<Substance> substances= new List<Substance>();  
@@ -335,7 +335,7 @@ namespace ScraperTest_2
         }
 
 
-        private void find_Names(object sender, EventArgs e)
+        /*private void find_Names(object sender, EventArgs e)
         {
             string new_url;
             bool loaded = true;
@@ -759,7 +759,7 @@ namespace ScraperTest_2
         private void DETAILSCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             DetailsText.Text = "OK";
-        }
+        }*/
 
         //================= RETRIEVE ===============================================================================
 
@@ -852,10 +852,16 @@ namespace ScraperTest_2
 
         private void SetCountBtn_Click(object sender, EventArgs e)
         {
+            HtmlWeb web = new HtmlWeb();
+            HtmlAgilityPack.HtmlDocument d = web.Load("https://echa.europa.eu/el/information-on-chemicals/cl-inventory-database?p_p_id=dissclinventory_WAR_dissclinventoryportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_dissclinventory_WAR_dissclinventoryportlet_jspPage=%2Fhtml%2Fsearch%2Fsearch.jsp&_dissclinventory_WAR_dissclinventoryportlet_searching=true&_dissclinventory_WAR_dissclinventoryportlet_iterating=true&_dissclinventory_WAR_dissclinventoryportlet_criteriaParam=_dissclinventory_WAR_dissclinventoryportlet_criteriaKeyY6UW&_dissclinventory_WAR_dissclinventoryportlet_delta=50&_dissclinventory_WAR_dissclinventoryportlet_orderByCol=CLD_NAME&_dissclinventory_WAR_dissclinventoryportlet_orderByType=asc&_dissclinventory_WAR_dissclinventoryportlet_resetCur=false&_dissclinventory_WAR_dissclinventoryportlet_cur=1");
+            var a = from k in d.DocumentNode.SelectNodes("//span[@class='lfr-icon-menu-text']")
+                    select k;
+            int l = int.Parse(a.ElementAt(0).InnerText.Trim().Split(" ").Last());
+
             string m = Interaction.InputBox("Input Urls Count", "Input", "1");
             if (int.TryParse(m, out int v))
             {
-                if (v > 0 && v <= 4284) max = v;
+                if (v > 0 && v <= l) max = v;
                 else MessageBox.Show("WRONG NUMBER !");
             }
             else MessageBox.Show("WRONG FORMAT !");
