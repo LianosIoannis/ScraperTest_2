@@ -57,6 +57,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.ReadXlBtn = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -312,6 +313,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.button1);
             this.groupBox3.Controls.Add(this.ReadXlBtn);
             this.groupBox3.Location = new System.Drawing.Point(631, 386);
             this.groupBox3.Name = "groupBox3";
@@ -329,6 +331,16 @@
             this.ReadXlBtn.Text = "READ EXCEL DATA";
             this.ReadXlBtn.UseVisualStyleBackColor = true;
             this.ReadXlBtn.Click += new System.EventHandler(this.ReadXlBtn_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(22, 37);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
@@ -392,5 +404,6 @@
         private GroupBox groupBox3;
         private Button ReadXlBtn;
         private ProgressBar Main_progress;
+        private Button button1;
     }
 }

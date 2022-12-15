@@ -199,7 +199,7 @@ namespace ScraperTest_2
                 int count = starting_count*50;
                 foreach (var cell in k)
                 {
-                    string line = String.Concat(cell.InnerText.Trim().Where(k => !Char.IsWhiteSpace(k)));                   
+                    string line = cell.InnerText.Trim();// String.Concat(cell.InnerText.Trim().Where(k => !Char.IsWhiteSpace(k)));                   
                     if (line == "") line = "NULL";
                     substances.ElementAt(count).name = line;
                     count++;
@@ -1070,7 +1070,7 @@ namespace ScraperTest_2
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-            string xlpath = "C:\\Users\\User\\Desktop\\ChemList.xlsx";
+            string xlpath = "C:\\Users\\User\\Downloads\\annex_vi_clp_table_atp18_en.xlsx";
             var stream = File.Open(xlpath, FileMode.Open, FileAccess.Read);
             var reader = ExcelReaderFactory.CreateReader(stream);
             
@@ -1081,6 +1081,20 @@ namespace ScraperTest_2
             stream.Dispose();
             reader.Dispose();
         }//READS EXCEL FILE AND OPENS FORM3 TO SHOW DATA
-       
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            char p = char.Parse("'");
+            string a = "abc''defg";
+            string[] temp = a.Split(p);
+            string n = "";
+            for (int i = 0; i < temp.Length-1; i++)
+            {
+                n += temp[i] + "''";
+                
+            }
+            n += temp[temp.Length - 1];
+            MessageBox.Show(n);
+        }
     }
 }
