@@ -390,7 +390,7 @@ namespace ScraperTest_2
         }
         private void lhsPerChem()
         {
-            buildTablefrom(9, "cccLHSPerChem", new string[] { "CHEMID", "LHS" });
+            buildTablefrom(8, "cccLHSPerChem", new string[] { "CHEMID", "LHS" });
 
             //DataTable dt = new DataTable();
             //dt.Columns.Add("CHEMID");

@@ -167,7 +167,7 @@ namespace ScraperTest_2
 
                 for (int j = 0; j < 50; j++) substances.Add(new Substance());
 
-                Find_Names(d,i);
+                Find_Names(d, i);
                 Find_EC(d, i);
                 Find_CAS(d, i);
                 Find_CLASS(d, i);
@@ -1081,20 +1081,5 @@ namespace ScraperTest_2
             stream.Dispose();
             reader.Dispose();
         }//READS EXCEL FILE AND OPENS FORM3 TO SHOW DATA
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            char p = char.Parse("'");
-            string a = "abc''defg";
-            string[] temp = a.Split(p);
-            string n = "";
-            for (int i = 0; i < temp.Length-1; i++)
-            {
-                n += temp[i] + "''";
-                
-            }
-            n += temp[temp.Length - 1];
-            MessageBox.Show(n);
-        }
     }
 }
