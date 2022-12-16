@@ -176,8 +176,5 @@ namespace ScraperTest_2
             conn.Close();
             bk.Close();
         }
-
-        //string s = c.Attributes["title"].Value.Trim().ToLower() + ".png";
-
     }
 }
